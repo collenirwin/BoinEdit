@@ -16,8 +16,7 @@ namespace BoinEditNS {
 
         #region Vars
 
-        Dictionary<string, string> extensionMap = new Dictionary<string, string>();
-        Dictionary<string, Language> languageMap = new Dictionary<string, Language>();
+        FileItem activeFileItem;
 
         #endregion
 
@@ -30,59 +29,9 @@ namespace BoinEditNS {
             txtMain.BracketsStyle  = new MarkerStyle(new SolidBrush(Color.FromArgb(100, 86, 156, 214)));
             txtMain.BracketsStyle2 = new MarkerStyle(new SolidBrush(Color.FromArgb(100, 86, 156, 214)));
 
-            // Pairing file extensions with languages
-            extensionMap.Add(".cs", "C#");
-            extensionMap.Add(".html", "HTML");
-            extensionMap.Add(".htm", "HTML");
-            extensionMap.Add(".js", "JavaScript");
-            extensionMap.Add(".lua", "Lua");
-            extensionMap.Add(".php", "PHP");
-            extensionMap.Add(".phtml", "PHP");
-            extensionMap.Add(".phps", "PHP");
-            extensionMap.Add(".sql", "SQL");
-            extensionMap.Add(".vb", "Visual Basic");
-            extensionMap.Add(".vbs", "Visual Basic");
-            extensionMap.Add(".xml", "XML");
-            extensionMap.Add(".rss", "XML");
-            extensionMap.Add(".xsd", "XML");
-            extensionMap.Add(".xslt", "XML");
-
-            // For textbox language selection
-            languageMap.Add("Plain Text", Language.Custom);
-            languageMap.Add("C#", Language.CSharp);
-            languageMap.Add("HTML", Language.HTML);
-            languageMap.Add("JavaScript", Language.JS);
-            languageMap.Add("Lua", Language.Lua);
-            languageMap.Add("PHP", Language.PHP);
-            languageMap.Add("SQL", Language.SQL);
-            languageMap.Add("Visual Basic", Language.VB);
-            languageMap.Add("XML", Language.XML);
-
-
-            FileItem f = new FileItem();
-            pnlOpenFiles.Controls.Add(f);
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-            pnlOpenFiles.Controls.Add(new FileItem());
-            pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1].Dock = DockStyle.Top;
-
+            // Initialize all Dictionaries in Dict
+            Dicts.init();
         }
-
-        #endregion
 
         #region SplitContainer Events & Related Methods
 
@@ -175,8 +124,8 @@ namespace BoinEditNS {
 
         // Change the language of the FCTB
         private void changeLanguage(string newLanguage) {
-            bool hasLanguage = languageMap.ContainsKey(newLanguage);
-            txtMain.Language = (hasLanguage) ? languageMap[newLanguage] : Language.Custom;
+            bool hasLanguage = Dicts.languageMap.ContainsKey(newLanguage);
+            txtMain.Language = (hasLanguage) ? Dicts.languageMap[newLanguage] : Language.Custom;
             tsiLanguage.Text = (hasLanguage) ? newLanguage : "Plain Text";
 
             txtMain.ClearStylesBuffer();
@@ -191,8 +140,10 @@ namespace BoinEditNS {
 
         #endregion
 
+        #region SideBar Events & Related Methods
+
         private void toggleButtonText(BoinBoxNS.BoinBox button) {
-            string buttonText = button.Text.Substring(1);
+            string buttonText = button.Text.Substring(1); // Everything after 1st char
             button.Text = (button.Text.StartsWith("v")) ? ">" + buttonText : "v" + buttonText;
         }
 
@@ -202,8 +153,56 @@ namespace BoinEditNS {
         }
 
         private void btnToggleDir_Click(object sender, EventArgs e) {
-            // TODO: Toggle listview here
+            lstDir.Visible = !lstDir.Visible;
             toggleButtonText(btnToggleDir);
         }
+
+        private void openFileItem(FileItem fi) {
+            if (activeFileItem != null) {
+                activeFileItem.close();
+            }
+
+            fi.open(txtMain);
+            activeFileItem = fi;
+        }
+
+        private void lstDir_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
+            if (lstDir.SelectedNode != null) { // we have something selected
+
+                if (!lstDir.hasDir) { // no dir
+                    lstDir.openDir(); // show folder dialog
+
+                } else if (!lstDir.SelectedNode.Text.EndsWith("\\")) { // file selected
+                    try {
+                        BoinFile bf = new BoinFile(lstDir.SelectedNode.Tag as FileInfo);
+                        FileItem fi = new FileItem(bf);
+
+                        foreach (Control c in pnlOpenFiles.Controls) {
+                            var f = c as FileItem;
+                            if (f != null && f.file.path == fi.file.path) { // Already open
+                                openFileItem(f); // open it into the editor
+                                return;
+                            }
+                        }
+
+                        pnlOpenFiles.Controls.Add(fi);
+                        fi.Dock = DockStyle.Top;
+
+                        openFileItem(fi);
+
+                    } catch (Exception ex) { // failed to open file
+                        MessageBox.Show(
+                            "Failed to open " + lstDir.SelectedNode.Text + " with the following message:\r\n " +
+                            ex.Message,
+                            Constants.CAPTION_ERROR
+                        );
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

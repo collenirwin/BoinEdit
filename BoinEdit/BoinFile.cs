@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace BoinEditNS {
         bool _isSaved;
         bool _isOpen;
 
-        DirectoryInfo _parentDirInfo;
+        //DirectoryInfo _parentDirInfo;
         FileInfo _fileInfo;
 
         #endregion
@@ -81,9 +82,8 @@ namespace BoinEditNS {
         #region Constructor & Methods
 
         // Constructor
-        public BoinFile(FileInfo fileInfo, DirectoryInfo parentDirInfo) {
+        public BoinFile(FileInfo fileInfo) {
             this._fileInfo = fileInfo;
-            this._parentDirInfo = parentDirInfo;
 
             this._name = _fileInfo.Name;
             this._path = _fileInfo.FullName;
@@ -94,6 +94,7 @@ namespace BoinEditNS {
         }
 
         #region Saving
+
 
         /// <summary>
         /// Attempts to save the specified text to the BoinFile's path. No error handling done.
@@ -111,12 +112,10 @@ namespace BoinEditNS {
         /// <param name="text">Text to save</param>
         /// <returns>false upon failure</returns>
         public bool saveAlert(string text) {
-            string msg = "Failed to save with the following message:\n  ";
+            string msg = "Failed to save " + _name + " with the following message:\r\n  ";
 
             try {
-                using (StreamWriter W = File.CreateText(this._path)) {
-                    W.Write(text);
-                }
+                saveQuiet(text);
 
                 return true;
 
@@ -128,6 +127,27 @@ namespace BoinEditNS {
 
             MessageBox.Show(msg, Constants.CAPTION_ERROR);
             return false;
+        }
+
+        #endregion
+
+        #region Opening
+
+        /// <summary>
+        /// Opens the file and set BoinFile.content to its contents
+        /// </summary>
+        /// <returns>true if opened successfully (file exists)</returns>
+        public bool open() {
+            if (this._fileInfo.Exists) {
+                using (StreamReader R = File.OpenText(this._fileInfo.FullName)) {
+                    this._content = R.ReadToEnd();
+                }
+
+                this._isOpen = true;
+                return true;
+            } else {
+                return false;
+            }
         }
 
         #endregion

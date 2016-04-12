@@ -42,7 +42,7 @@
             // btnFile
             // 
             this.btnFile.AutoEllipsis = true;
-            this.btnFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.btnFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnFile.BorderColor = System.Drawing.Color.Empty;
             this.btnFile.BorderSize = 0;
             this.btnFile.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -62,7 +62,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnClose.BorderColor = System.Drawing.Color.Empty;
             this.btnClose.BorderSize = 0;
             this.btnClose.Dock = System.Windows.Forms.DockStyle.Left;
@@ -76,8 +76,8 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(25, 21);
             this.btnClose.TabIndex = 0;
-            this.btnClose.Text = "■";
             this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             this.btnClose.Enter += new System.EventHandler(this.btnClose_MouseEnter);
             this.btnClose.Leave += new System.EventHandler(this.btnClose_MouseLeave);
             this.btnClose.MouseEnter += new System.EventHandler(this.btnClose_MouseEnter);
@@ -87,6 +87,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.Controls.Add(this.panel);
             this.Name = "FileItem";
             this.Size = new System.Drawing.Size(214, 21);

@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Open Directory");
             this.msMain = new System.Windows.Forms.MenuStrip();
             this.tsiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,13 +80,11 @@
             this.findReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerFull = new System.Windows.Forms.SplitContainer();
-            this.splitContainerFiles = new System.Windows.Forms.SplitContainer();
-            this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
-            this.pnlToggleOpenFiles = new System.Windows.Forms.Panel();
-            this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnToggleDir = new BoinBoxNS.BoinBox();
             this.pnlOpenFiles = new System.Windows.Forms.Panel();
+            this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
+            this.btnToggleDir = new BoinBoxNS.BoinBox();
+            this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
+            this.lstDir = new BoinEditNS.DirTreeView();
             this.msMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtMain)).BeginInit();
             this.cmsTextEdit.SuspendLayout();
@@ -93,15 +92,9 @@
             this.splitContainerFull.Panel1.SuspendLayout();
             this.splitContainerFull.Panel2.SuspendLayout();
             this.splitContainerFull.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerFiles)).BeginInit();
-            this.splitContainerFiles.Panel1.SuspendLayout();
-            this.splitContainerFiles.Panel2.SuspendLayout();
-            this.splitContainerFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEditConsole)).BeginInit();
             this.splitContainerEditConsole.Panel1.SuspendLayout();
             this.splitContainerEditConsole.SuspendLayout();
-            this.pnlToggleOpenFiles.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // msMain
@@ -593,7 +586,10 @@
             // 
             // splitContainerFull.Panel1
             // 
-            this.splitContainerFull.Panel1.Controls.Add(this.splitContainerFiles);
+            this.splitContainerFull.Panel1.Controls.Add(this.lstDir);
+            this.splitContainerFull.Panel1.Controls.Add(this.btnToggleDir);
+            this.splitContainerFull.Panel1.Controls.Add(this.pnlOpenFiles);
+            this.splitContainerFull.Panel1.Controls.Add(this.btnToggleOpenFiles);
             this.splitContainerFull.Panel1MinSize = 100;
             // 
             // splitContainerFull.Panel2
@@ -606,30 +602,15 @@
             this.splitContainerFull.TabStop = false;
             this.splitContainerFull.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
             // 
-            // splitContainerFiles
+            // pnlOpenFiles
             // 
-            this.splitContainerFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerFiles.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainerFiles.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerFiles.Name = "splitContainerFiles";
-            this.splitContainerFiles.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerFiles.Panel1
-            // 
-            this.splitContainerFiles.Panel1.AutoScroll = true;
-            this.splitContainerFiles.Panel1.Controls.Add(this.pnlOpenFiles);
-            this.splitContainerFiles.Panel1.Controls.Add(this.pnlToggleOpenFiles);
-            this.splitContainerFiles.Panel1MinSize = 22;
-            // 
-            // splitContainerFiles.Panel2
-            // 
-            this.splitContainerFiles.Panel2.Controls.Add(this.panel1);
-            this.splitContainerFiles.Panel2MinSize = 22;
-            this.splitContainerFiles.Size = new System.Drawing.Size(150, 370);
-            this.splitContainerFiles.SplitterDistance = 127;
-            this.splitContainerFiles.TabIndex = 0;
-            this.splitContainerFiles.TabStop = false;
-            this.splitContainerFiles.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
+            this.pnlOpenFiles.AutoScroll = true;
+            this.pnlOpenFiles.AutoSize = true;
+            this.pnlOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 22);
+            this.pnlOpenFiles.Name = "pnlOpenFiles";
+            this.pnlOpenFiles.Size = new System.Drawing.Size(150, 0);
+            this.pnlOpenFiles.TabIndex = 1;
             // 
             // splitContainerEditConsole
             // 
@@ -652,15 +633,27 @@
             this.splitContainerEditConsole.TabStop = false;
             this.splitContainerEditConsole.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
             // 
-            // pnlToggleOpenFiles
+            // btnToggleDir
             // 
-            this.pnlToggleOpenFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.pnlToggleOpenFiles.Controls.Add(this.btnToggleOpenFiles);
-            this.pnlToggleOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlToggleOpenFiles.Location = new System.Drawing.Point(0, 0);
-            this.pnlToggleOpenFiles.Name = "pnlToggleOpenFiles";
-            this.pnlToggleOpenFiles.Size = new System.Drawing.Size(150, 22);
-            this.pnlToggleOpenFiles.TabIndex = 0;
+            this.btnToggleDir.AutoSize = true;
+            this.btnToggleDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.btnToggleDir.BorderColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.BorderSize = 0;
+            this.btnToggleDir.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnToggleDir.FlatAppearance.BorderSize = 0;
+            this.btnToggleDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToggleDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnToggleDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.btnToggleDir.Location = new System.Drawing.Point(0, 22);
+            this.btnToggleDir.MouseDownBackColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.MouseOverBackColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.Name = "btnToggleDir";
+            this.btnToggleDir.Size = new System.Drawing.Size(150, 23);
+            this.btnToggleDir.TabIndex = 0;
+            this.btnToggleDir.Text = "v Directory";
+            this.btnToggleDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnToggleDir.UseVisualStyleBackColor = false;
+            this.btnToggleDir.Click += new System.EventHandler(this.btnToggleDir_Click);
             // 
             // btnToggleOpenFiles
             // 
@@ -668,7 +661,7 @@
             this.btnToggleOpenFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.btnToggleOpenFiles.BorderColor = System.Drawing.Color.Empty;
             this.btnToggleOpenFiles.BorderSize = 0;
-            this.btnToggleOpenFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnToggleOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnToggleOpenFiles.FlatAppearance.BorderSize = 0;
             this.btnToggleOpenFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnToggleOpenFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -684,46 +677,27 @@
             this.btnToggleOpenFiles.UseVisualStyleBackColor = false;
             this.btnToggleOpenFiles.Click += new System.EventHandler(this.btnToggleOpenFiles_Click);
             // 
-            // panel1
+            // lstDir
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.panel1.Controls.Add(this.btnToggleDir);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(150, 22);
-            this.panel1.TabIndex = 1;
-            // 
-            // btnToggleDir
-            // 
-            this.btnToggleDir.AutoEllipsis = true;
-            this.btnToggleDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.btnToggleDir.BorderColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.BorderSize = 0;
-            this.btnToggleDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnToggleDir.FlatAppearance.BorderSize = 0;
-            this.btnToggleDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnToggleDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToggleDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.btnToggleDir.Location = new System.Drawing.Point(0, 0);
-            this.btnToggleDir.MouseDownBackColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.MouseOverBackColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.Name = "btnToggleDir";
-            this.btnToggleDir.Size = new System.Drawing.Size(150, 22);
-            this.btnToggleDir.TabIndex = 0;
-            this.btnToggleDir.Text = "v No Directory Selected";
-            this.btnToggleDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnToggleDir.UseVisualStyleBackColor = false;
-            this.btnToggleDir.Click += new System.EventHandler(this.btnToggleDir_Click);
-            // 
-            // pnlOpenFiles
-            // 
-            this.pnlOpenFiles.AutoScroll = true;
-            this.pnlOpenFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 22);
-            this.pnlOpenFiles.Name = "pnlOpenFiles";
-            this.pnlOpenFiles.Size = new System.Drawing.Size(150, 105);
-            this.pnlOpenFiles.TabIndex = 1;
+            this.lstDir.BackColor = System.Drawing.SystemColors.Control;
+            this.lstDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstDir.dirColor = System.Drawing.SystemColors.Control;
+            this.lstDir.directory = null;
+            this.lstDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstDir.fileColor = System.Drawing.SystemColors.Control;
+            this.lstDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.lstDir.Indent = 15;
+            this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
+            this.lstDir.Location = new System.Drawing.Point(0, 45);
+            this.lstDir.Name = "lstDir";
+            treeNode1.Name = "nodOpenDir";
+            treeNode1.Text = "Open Directory";
+            this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.lstDir.Size = new System.Drawing.Size(150, 325);
+            this.lstDir.TabIndex = 2;
+            this.lstDir.TabStop = false;
+            this.lstDir.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.lstDir_NodeMouseDoubleClick);
             // 
             // Form1
             // 
@@ -741,18 +715,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtMain)).EndInit();
             this.cmsTextEdit.ResumeLayout(false);
             this.splitContainerFull.Panel1.ResumeLayout(false);
+            this.splitContainerFull.Panel1.PerformLayout();
             this.splitContainerFull.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerFull)).EndInit();
             this.splitContainerFull.ResumeLayout(false);
-            this.splitContainerFiles.Panel1.ResumeLayout(false);
-            this.splitContainerFiles.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerFiles)).EndInit();
-            this.splitContainerFiles.ResumeLayout(false);
             this.splitContainerEditConsole.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEditConsole)).EndInit();
             this.splitContainerEditConsole.ResumeLayout(false);
-            this.pnlToggleOpenFiles.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -801,7 +770,6 @@
         private System.Windows.Forms.ToolStripMenuItem tsiVB;
         private System.Windows.Forms.ToolStripMenuItem tsiXML;
         private System.Windows.Forms.SplitContainer splitContainerEditConsole;
-        private System.Windows.Forms.SplitContainer splitContainerFiles;
         private System.Windows.Forms.ToolStripMenuItem tsiPlainText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem printToolStripMenuItem;
@@ -816,11 +784,10 @@
         private System.Windows.Forms.ToolStripMenuItem goToToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.Panel pnlToggleOpenFiles;
         private BoinBoxNS.BoinBox btnToggleOpenFiles;
-        private System.Windows.Forms.Panel panel1;
         private BoinBoxNS.BoinBox btnToggleDir;
         private System.Windows.Forms.Panel pnlOpenFiles;
+        private DirTreeView lstDir;
     }
 }
 
