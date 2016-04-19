@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BoinEditNS {
@@ -122,12 +116,13 @@ namespace BoinEditNS {
                 DialogResult result = MessageBox.Show(
                     "Save " + _file.name + " before closing?",
                     Constants.CAPTION_DEFAULT,
-                    MessageBoxButtons.YesNoCancel);
+                    MessageBoxButtons.YesNoCancel
+                );
 
                 if (result == DialogResult.Yes) {
 
                     // close if file saved properly
-                    if (_file.saveAlert(_file.content)) {
+                    if (_file.saveAlert()) {
                         this.Dispose();
                     }
 

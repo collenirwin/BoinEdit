@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using FastColoredTextBoxNS;
 using System.Windows.Forms;
 
 namespace BoinEditNS {
@@ -100,8 +94,8 @@ namespace BoinEditNS {
         /// Attempts to save the specified text to the BoinFile's path. No error handling done.
         /// </summary>
         /// <param name="text">Text to save</param>
-        public void saveQuiet(string text) {
-            using (StreamWriter W = File.CreateText(this._path)) {
+        public void saveQuiet(string text, string path) {
+            using (StreamWriter W = File.CreateText(path)) {
                 W.Write(text);
             }
         }
@@ -111,14 +105,12 @@ namespace BoinEditNS {
         /// </summary>
         /// <param name="text">Text to save</param>
         /// <returns>false upon failure</returns>
-        public bool saveAlert(string text) {
+        public bool saveAlert() {
             string msg = "Failed to save " + _name + " with the following message:\r\n  ";
 
             try {
-                saveQuiet(text);
-
+                saveQuiet(this.content, this.path);
                 return true;
-
             } catch (IOException ex) { // IO specific exception
                 msg += ex.Message;
             } catch (Exception ex) { // Any other error
@@ -127,6 +119,24 @@ namespace BoinEditNS {
 
             MessageBox.Show(msg, Constants.CAPTION_ERROR);
             return false;
+        }
+        
+        /// <summary>
+        /// Save to a scratchfile
+        /// </summary>
+        /// <param name="path">file path</param>
+        /// <returns>true if successful</returns>
+        public bool saveToScratch(string path) {
+            try {
+                if (!Directory.Exists(path)) {
+                    Directory.CreateDirectory(path);
+                }
+
+                saveQuiet(this.content, path);
+                return true;
+            } catch {
+                return false;
+            }
         }
 
         #endregion

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using FastColoredTextBoxNS;
+﻿using FastColoredTextBoxNS;
+using System.Collections.Generic;
 
 namespace BoinEditNS {
     public static class Dicts {

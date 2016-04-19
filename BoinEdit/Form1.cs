@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FastColoredTextBoxNS;
+using System;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Diagnostics;
-using FastColoredTextBoxNS;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace BoinEditNS {
     public partial class Form1 : Form {
@@ -44,6 +39,46 @@ namespace BoinEditNS {
         #region ToolStrip Events & Related Methods
 
         #region File
+
+        // Open File
+        private void tsiOpen_Click(object sender, EventArgs e) {
+            ofdOpen.ShowDialog();
+        }
+
+        private void ofdOpen_FileOk(object sender, CancelEventArgs e) {
+
+            string error = "Could not open the following file(s):\r\n";
+            bool errorFlag = false;
+            int fileCount = pnlOpenFiles.Controls.Count;
+
+            foreach (string path in ofdOpen.FileNames) {
+                try {
+                    addFile(new FileItem(new BoinFile(new FileInfo(path))), false);
+                } catch {
+                    error += " " + path + "\r\n";
+                    errorFlag = true;
+                }
+            }
+
+            if (errorFlag) {
+                MessageBox.Show(error, Constants.CAPTION_ERROR);
+            }
+
+            if (fileCount != pnlOpenFiles.Controls.Count) { // if we added file(s)
+                openFileItem(pnlOpenFiles.Controls[pnlOpenFiles.Controls.Count - 1] as FileItem);
+            }
+        }
+
+        // Open Folder
+        private void tsiOpenFolder_Click(object sender, EventArgs e) {
+            openFolder();
+        }
+
+        // Close Folder
+        private void tsiCloseFolder_Click(object sender, EventArgs e) {
+            lstDir.closeDir();
+            lstDir.Nodes.Add("Open Directory");
+        }
 
         // Print
         private void printToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -157,15 +192,6 @@ namespace BoinEditNS {
             toggleButtonText(btnToggleDir);
         }
 
-        private void openFileItem(FileItem fi) {
-            if (activeFileItem != null) {
-                activeFileItem.close();
-            }
-
-            fi.open(txtMain);
-            activeFileItem = fi;
-        }
-
         private void lstDir_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
             if (lstDir.SelectedNode != null) { // we have something selected
 
@@ -177,18 +203,7 @@ namespace BoinEditNS {
                         BoinFile bf = new BoinFile(lstDir.SelectedNode.Tag as FileInfo);
                         FileItem fi = new FileItem(bf);
 
-                        foreach (Control c in pnlOpenFiles.Controls) {
-                            var f = c as FileItem;
-                            if (f != null && f.file.path == fi.file.path) { // Already open
-                                openFileItem(f); // open it into the editor
-                                return;
-                            }
-                        }
-
-                        pnlOpenFiles.Controls.Add(fi);
-                        fi.Dock = DockStyle.Top;
-
-                        openFileItem(fi);
+                        addFile(fi);
 
                     } catch (Exception ex) { // failed to open file
                         MessageBox.Show(
@@ -201,7 +216,66 @@ namespace BoinEditNS {
             }
         }
 
+        // Closed a file
+        private void pnlOpenFiles_ControlRemoved(object sender, ControlEventArgs e) {
+            if (e.Control == activeFileItem) {
+                txtMain.Clear();
+            }
+        }
+
         #endregion
+
+        #endregion
+
+        #region File/Folder Methods
+
+        private void addFile(FileItem file, bool open = true) {
+            foreach (Control c in pnlOpenFiles.Controls) {
+                var f = c as FileItem;
+                if (f != null && f.file.path == file.file.path) { // Already open
+                    openFileItem(f); // open it into the editor
+                    return;
+                }
+            }
+
+            pnlOpenFiles.Controls.Add(file);
+            file.Dock = DockStyle.Top;
+
+            if (open) {
+                openFileItem(file);
+            }
+        }
+
+        private void openFileItem(FileItem fi) {
+            if (activeFileItem != null) {
+                activeFileItem.close();
+            }
+
+            fi.open(txtMain);
+            activeFileItem = fi;
+
+            txtMain.Focus();
+
+            // set sytnax higlighting
+            string ext = Path.GetExtension(activeFileItem.file.name);
+            if (Dicts.extensionMap.ContainsKey(ext)) {
+                changeLanguage(Dicts.extensionMap[ext]);
+            } else {
+                changeLanguage("");
+            }
+        }
+
+        private void openFolder() {
+            string prompt = "Opening a new folder will close the current one. Continue?";
+
+            if (lstDir.hasDir && // if we have a directory open, and the user doesn't want to open a new one
+                MessageBox.Show(prompt, Constants.CAPTION_DEFAULT, MessageBoxButtons.YesNo) == DialogResult.No) 
+            {
+                return;
+            }
+
+            lstDir.openDir();
+        }
 
         #endregion
     }

@@ -57,9 +57,6 @@
     <Compile Include="BoinFile.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Dicts.cs" />
-    <Compile Include="DirListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="DirTreeView.cs">
       <SubType>Component</SubType>
     </Compile>

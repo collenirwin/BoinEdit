@@ -82,9 +82,10 @@
             this.splitContainerFull = new System.Windows.Forms.SplitContainer();
             this.pnlOpenFiles = new System.Windows.Forms.Panel();
             this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
+            this.ofdOpen = new System.Windows.Forms.OpenFileDialog();
+            this.lstDir = new BoinEditNS.DirTreeView();
             this.btnToggleDir = new BoinBoxNS.BoinBox();
             this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
-            this.lstDir = new BoinEditNS.DirTreeView();
             this.msMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtMain)).BeginInit();
             this.cmsTextEdit.SuspendLayout();
@@ -141,14 +142,15 @@
             this.tsiNew.Name = "tsiNew";
             this.tsiNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.tsiNew.Size = new System.Drawing.Size(214, 22);
-            this.tsiNew.Text = "New";
+            this.tsiNew.Text = "New File";
             // 
             // tsiOpen
             // 
             this.tsiOpen.Name = "tsiOpen";
             this.tsiOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.tsiOpen.Size = new System.Drawing.Size(214, 22);
-            this.tsiOpen.Text = "Open";
+            this.tsiOpen.Text = "Open File";
+            this.tsiOpen.Click += new System.EventHandler(this.tsiOpen_Click);
             // 
             // tsiOpenFolder
             // 
@@ -157,12 +159,14 @@
             | System.Windows.Forms.Keys.O)));
             this.tsiOpenFolder.Size = new System.Drawing.Size(214, 22);
             this.tsiOpenFolder.Text = "Open Folder";
+            this.tsiOpenFolder.Click += new System.EventHandler(this.tsiOpenFolder_Click);
             // 
             // tsiCloseFolder
             // 
             this.tsiCloseFolder.Name = "tsiCloseFolder";
             this.tsiCloseFolder.Size = new System.Drawing.Size(214, 22);
             this.tsiCloseFolder.Text = "Close Folder";
+            this.tsiCloseFolder.Click += new System.EventHandler(this.tsiCloseFolder_Click);
             // 
             // toolStripSeparator1
             // 
@@ -476,7 +480,6 @@
             this.txtMain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
             this.txtMain.IndentBackColor = System.Drawing.Color.Transparent;
             this.txtMain.IsReplaceMode = false;
-            this.txtMain.Language = FastColoredTextBoxNS.Language.JS;
             this.txtMain.LeftBracket = '(';
             this.txtMain.LeftBracket2 = '{';
             this.txtMain.LineNumberColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
@@ -489,7 +492,6 @@
             this.txtMain.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(30)))), ((int)(((byte)(144)))), ((int)(((byte)(255)))));
             this.txtMain.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("txtMain.ServiceColors")));
             this.txtMain.ServiceLinesColor = System.Drawing.Color.Transparent;
-            this.txtMain.ShowFoldingLines = true;
             this.txtMain.Size = new System.Drawing.Size(598, 266);
             this.txtMain.TabIndex = 0;
             this.txtMain.Text = "// test.js\r\n// Collen Irwin\r\n\r\nfunction test(arg1, arg2) {\r\n    document.write(ar" +
@@ -611,6 +613,7 @@
             this.pnlOpenFiles.Name = "pnlOpenFiles";
             this.pnlOpenFiles.Size = new System.Drawing.Size(150, 0);
             this.pnlOpenFiles.TabIndex = 1;
+            this.pnlOpenFiles.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.pnlOpenFiles_ControlRemoved);
             // 
             // splitContainerEditConsole
             // 
@@ -632,6 +635,34 @@
             this.splitContainerEditConsole.TabIndex = 3;
             this.splitContainerEditConsole.TabStop = false;
             this.splitContainerEditConsole.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
+            // 
+            // ofdOpen
+            // 
+            this.ofdOpen.Title = "Open File - BoinEdit";
+            this.ofdOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.ofdOpen_FileOk);
+            // 
+            // lstDir
+            // 
+            this.lstDir.BackColor = System.Drawing.SystemColors.Control;
+            this.lstDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstDir.dirColor = System.Drawing.SystemColors.Control;
+            this.lstDir.directory = null;
+            this.lstDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstDir.fileColor = System.Drawing.SystemColors.Control;
+            this.lstDir.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.lstDir.Indent = 15;
+            this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
+            this.lstDir.Location = new System.Drawing.Point(0, 45);
+            this.lstDir.Name = "lstDir";
+            treeNode1.Name = "nodOpenDir";
+            treeNode1.Text = "Open Directory";
+            this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.lstDir.Size = new System.Drawing.Size(150, 325);
+            this.lstDir.TabIndex = 2;
+            this.lstDir.TabStop = false;
+            this.lstDir.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.lstDir_NodeMouseDoubleClick);
             // 
             // btnToggleDir
             // 
@@ -676,28 +707,6 @@
             this.btnToggleOpenFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnToggleOpenFiles.UseVisualStyleBackColor = false;
             this.btnToggleOpenFiles.Click += new System.EventHandler(this.btnToggleOpenFiles_Click);
-            // 
-            // lstDir
-            // 
-            this.lstDir.BackColor = System.Drawing.SystemColors.Control;
-            this.lstDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstDir.dirColor = System.Drawing.SystemColors.Control;
-            this.lstDir.directory = null;
-            this.lstDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstDir.fileColor = System.Drawing.SystemColors.Control;
-            this.lstDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.lstDir.Indent = 15;
-            this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
-            this.lstDir.Location = new System.Drawing.Point(0, 45);
-            this.lstDir.Name = "lstDir";
-            treeNode1.Name = "nodOpenDir";
-            treeNode1.Text = "Open Directory";
-            this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            this.lstDir.Size = new System.Drawing.Size(150, 325);
-            this.lstDir.TabIndex = 2;
-            this.lstDir.TabStop = false;
-            this.lstDir.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.lstDir_NodeMouseDoubleClick);
             // 
             // Form1
             // 
@@ -788,6 +797,7 @@
         private BoinBoxNS.BoinBox btnToggleDir;
         private System.Windows.Forms.Panel pnlOpenFiles;
         private DirTreeView lstDir;
+        private System.Windows.Forms.OpenFileDialog ofdOpen;
     }
 }
 
