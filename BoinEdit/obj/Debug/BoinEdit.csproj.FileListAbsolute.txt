@@ -20,3 +20,10 @@ E:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEditNS.Form1.resources
 E:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEditNS.Properties.Resources.resources
 E:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEditNS.FileItem.resources
 G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEditNS.FileItem.resources
+E:\School2016.1\Prog\BoinEdit\BoinEdit\bin\Debug\System.Management.Automation.dll
+G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\DirTreeViewWPF.baml
+G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\DirTreeViewWPF.g.cs
+G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEdit_Content.g.cs
+G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEdit_MarkupCompile.cache
+G:\School2016.1\Prog\BoinEdit\BoinEdit\obj\Debug\BoinEdit.g.resources
+G:\School2016.1\Prog\BoinEdit\BoinEdit\bin\Debug\System.Management.Automation.dll

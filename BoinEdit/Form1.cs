@@ -12,6 +12,7 @@ namespace BoinEditNS {
         #region Vars
 
         FileItem activeFileItem;
+        DirectoryInfo scratchDirectory = new DirectoryInfo("scratch");
 
         #endregion
 
@@ -78,6 +79,44 @@ namespace BoinEditNS {
         private void tsiCloseFolder_Click(object sender, EventArgs e) {
             lstDir.closeDir();
             lstDir.Nodes.Add("Open Directory");
+        }
+
+        private bool checkSave(FileItem fi) {
+            if (fi.file.fileInfo != null && fi.file.fileInfo.Exists) {
+                return fi.file.saveAlert();
+            } else { // Prompt Save As
+                sfdSave.ShowDialog();
+                return true;
+            }
+        }
+
+        // Save
+        private void tsiSave_Click(object sender, EventArgs e) {
+            checkSave(activeFileItem);
+        }
+        
+        // Save As
+        private void tsiSaveAs_Click(object sender, EventArgs e) {
+            sfdSave.ShowDialog();
+        }
+
+        private void sfdSave_FileOk(object sender, CancelEventArgs e) {
+            try {
+                // TODO: sort out scratchfiles/new files
+            } catch (Exception ex) {
+                MessageBox.Show(
+                    "Failed to save " + 
+                    sfdSave.FileName + 
+                    " with the following message:\r\n  " +
+                    ex.Message,
+                    Constants.CAPTION_ERROR
+                );
+            }
+        }
+
+        // Save All
+        private void tsiSaveAll_Click(object sender, EventArgs e) {
+            saveAll();
         }
 
         // Print
@@ -275,6 +314,41 @@ namespace BoinEditNS {
             }
 
             lstDir.openDir();
+        }
+
+        private void setScratch(FileItem fi) {
+            fi.file.scratchFile = new FileInfo(scratchDirectory.FullName + "\\" + fi.btnFile.Text);
+        }
+
+        private void saveScratch(FileItem fi) {
+            try {
+                if (!Directory.Exists(scratchDirectory.FullName)) {
+                    scratchDirectory.Create();
+                }
+
+                if (fi.file.scratchFile == null) {
+                    setScratch(fi);
+                }
+
+                fi.file.saveToScratch();
+
+            } catch (Exception ex) {
+                MessageBox.Show(
+                    "Failed to perform IO in BoinEdit's root directory. More specifically:\r\n  " +
+                    ex.Message, 
+                    Constants.CAPTION_ERROR
+                );
+            }
+        }
+
+        private void saveAll() {
+            foreach (Control c in pnlOpenFiles.Controls) {
+                FileItem fi = c as FileItem;
+
+                if (!checkSave(fi)) {
+                    break; // Stop if we encounter an error
+                }
+            }
         }
 
         #endregion

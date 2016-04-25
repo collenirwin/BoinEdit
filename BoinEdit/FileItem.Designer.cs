@@ -99,7 +99,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel;
-        private BoinBoxNS.BoinBox btnFile;
-        private BoinBoxNS.BoinBox btnClose;
+        public BoinBoxNS.BoinBox btnFile;
+        public BoinBoxNS.BoinBox btnClose;
     }
 }

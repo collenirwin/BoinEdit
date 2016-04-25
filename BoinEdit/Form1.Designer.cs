@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Open Directory");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Open Directory");
             this.msMain = new System.Windows.Forms.MenuStrip();
             this.tsiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,12 +80,14 @@
             this.findReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerFull = new System.Windows.Forms.SplitContainer();
-            this.pnlOpenFiles = new System.Windows.Forms.Panel();
-            this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
-            this.ofdOpen = new System.Windows.Forms.OpenFileDialog();
             this.lstDir = new BoinEditNS.DirTreeView();
             this.btnToggleDir = new BoinBoxNS.BoinBox();
+            this.pnlOpenFiles = new System.Windows.Forms.Panel();
             this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
+            this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
+            this.ofdOpen = new System.Windows.Forms.OpenFileDialog();
+            this.fsWatcher = new System.IO.FileSystemWatcher();
+            this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.msMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtMain)).BeginInit();
             this.cmsTextEdit.SuspendLayout();
@@ -96,6 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEditConsole)).BeginInit();
             this.splitContainerEditConsole.Panel1.SuspendLayout();
             this.splitContainerEditConsole.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fsWatcher)).BeginInit();
             this.SuspendLayout();
             // 
             // msMain
@@ -179,12 +182,14 @@
             this.tsiSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.tsiSave.Size = new System.Drawing.Size(214, 22);
             this.tsiSave.Text = "Save";
+            this.tsiSave.Click += new System.EventHandler(this.tsiSave_Click);
             // 
             // tsiSaveAs
             // 
             this.tsiSaveAs.Name = "tsiSaveAs";
             this.tsiSaveAs.Size = new System.Drawing.Size(214, 22);
             this.tsiSaveAs.Text = "Save As...";
+            this.tsiSaveAs.Click += new System.EventHandler(this.tsiSaveAs_Click);
             // 
             // tsiSaveAll
             // 
@@ -193,6 +198,7 @@
             | System.Windows.Forms.Keys.S)));
             this.tsiSaveAll.Size = new System.Drawing.Size(214, 22);
             this.tsiSaveAll.Text = "Save All";
+            this.tsiSaveAll.Click += new System.EventHandler(this.tsiSaveAll_Click);
             // 
             // toolStripSeparator5
             // 
@@ -604,43 +610,6 @@
             this.splitContainerFull.TabStop = false;
             this.splitContainerFull.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
             // 
-            // pnlOpenFiles
-            // 
-            this.pnlOpenFiles.AutoScroll = true;
-            this.pnlOpenFiles.AutoSize = true;
-            this.pnlOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 22);
-            this.pnlOpenFiles.Name = "pnlOpenFiles";
-            this.pnlOpenFiles.Size = new System.Drawing.Size(150, 0);
-            this.pnlOpenFiles.TabIndex = 1;
-            this.pnlOpenFiles.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.pnlOpenFiles_ControlRemoved);
-            // 
-            // splitContainerEditConsole
-            // 
-            this.splitContainerEditConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.splitContainerEditConsole.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerEditConsole.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerEditConsole.Name = "splitContainerEditConsole";
-            this.splitContainerEditConsole.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerEditConsole.Panel1
-            // 
-            this.splitContainerEditConsole.Panel1.Controls.Add(this.txtMain);
-            // 
-            // splitContainerEditConsole.Panel2
-            // 
-            this.splitContainerEditConsole.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.splitContainerEditConsole.Size = new System.Drawing.Size(598, 370);
-            this.splitContainerEditConsole.SplitterDistance = 266;
-            this.splitContainerEditConsole.TabIndex = 3;
-            this.splitContainerEditConsole.TabStop = false;
-            this.splitContainerEditConsole.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
-            // 
-            // ofdOpen
-            // 
-            this.ofdOpen.Title = "Open File - BoinEdit";
-            this.ofdOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.ofdOpen_FileOk);
-            // 
             // lstDir
             // 
             this.lstDir.BackColor = System.Drawing.SystemColors.Control;
@@ -655,10 +624,10 @@
             this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
             this.lstDir.Location = new System.Drawing.Point(0, 45);
             this.lstDir.Name = "lstDir";
-            treeNode1.Name = "nodOpenDir";
-            treeNode1.Text = "Open Directory";
+            treeNode3.Name = "nodOpenDir";
+            treeNode3.Text = "Open Directory";
             this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode3});
             this.lstDir.Size = new System.Drawing.Size(150, 325);
             this.lstDir.TabIndex = 2;
             this.lstDir.TabStop = false;
@@ -686,6 +655,17 @@
             this.btnToggleDir.UseVisualStyleBackColor = false;
             this.btnToggleDir.Click += new System.EventHandler(this.btnToggleDir_Click);
             // 
+            // pnlOpenFiles
+            // 
+            this.pnlOpenFiles.AutoScroll = true;
+            this.pnlOpenFiles.AutoSize = true;
+            this.pnlOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 22);
+            this.pnlOpenFiles.Name = "pnlOpenFiles";
+            this.pnlOpenFiles.Size = new System.Drawing.Size(150, 0);
+            this.pnlOpenFiles.TabIndex = 1;
+            this.pnlOpenFiles.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.pnlOpenFiles_ControlRemoved);
+            // 
             // btnToggleOpenFiles
             // 
             this.btnToggleOpenFiles.AutoEllipsis = true;
@@ -707,6 +687,43 @@
             this.btnToggleOpenFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnToggleOpenFiles.UseVisualStyleBackColor = false;
             this.btnToggleOpenFiles.Click += new System.EventHandler(this.btnToggleOpenFiles_Click);
+            // 
+            // splitContainerEditConsole
+            // 
+            this.splitContainerEditConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.splitContainerEditConsole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerEditConsole.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerEditConsole.Name = "splitContainerEditConsole";
+            this.splitContainerEditConsole.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerEditConsole.Panel1
+            // 
+            this.splitContainerEditConsole.Panel1.Controls.Add(this.txtMain);
+            // 
+            // splitContainerEditConsole.Panel2
+            // 
+            this.splitContainerEditConsole.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.splitContainerEditConsole.Size = new System.Drawing.Size(598, 370);
+            this.splitContainerEditConsole.SplitterDistance = 266;
+            this.splitContainerEditConsole.TabIndex = 3;
+            this.splitContainerEditConsole.TabStop = false;
+            this.splitContainerEditConsole.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
+            // 
+            // ofdOpen
+            // 
+            this.ofdOpen.Title = "Open File - BoinEdit";
+            this.ofdOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.ofdOpen_FileOk);
+            // 
+            // fsWatcher
+            // 
+            this.fsWatcher.EnableRaisingEvents = true;
+            this.fsWatcher.IncludeSubdirectories = true;
+            this.fsWatcher.SynchronizingObject = this;
+            // 
+            // sfdSave
+            // 
+            this.sfdSave.Title = "Save As... - BoinEdit";
+            this.sfdSave.FileOk += new System.ComponentModel.CancelEventHandler(this.sfdSave_FileOk);
             // 
             // Form1
             // 
@@ -731,6 +748,7 @@
             this.splitContainerEditConsole.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerEditConsole)).EndInit();
             this.splitContainerEditConsole.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fsWatcher)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -798,6 +816,8 @@
         private System.Windows.Forms.Panel pnlOpenFiles;
         private DirTreeView lstDir;
         private System.Windows.Forms.OpenFileDialog ofdOpen;
+        private System.IO.FileSystemWatcher fsWatcher;
+        private System.Windows.Forms.SaveFileDialog sfdSave;
     }
 }
 

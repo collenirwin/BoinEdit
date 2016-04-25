@@ -79,7 +79,9 @@ namespace BoinEditNS {
                 
                 this.ioErrorMsg = "";
 
-                search(this.directory, this.Nodes); // Start the DirSearcher
+                if (!search(this.directory, this.Nodes)) { // Start the DirSearcher
+                    this.ioErrorMsg += " " + this.directory.Name + "\r\n";
+                }
                 
                 if (this.ioErrorMsg != "") { // we had an error along the way
                     MessageBox.Show(

@@ -15,6 +15,7 @@ namespace BoinEditNS {
 
         //DirectoryInfo _parentDirInfo;
         FileInfo _fileInfo;
+        FileInfo _scratchFile;
 
         #endregion
 
@@ -71,6 +72,14 @@ namespace BoinEditNS {
             get { return this._isOpen; }
         }
 
+        /// <summary>
+        /// Scratchfile FileInfo - So we can keep files open between sessions without saving
+        /// </summary>
+        public FileInfo scratchFile {
+            get { return  this._scratchFile; }
+            set { this._scratchFile = value; }
+        }
+
         #endregion
 
         #region Constructor & Methods
@@ -101,7 +110,7 @@ namespace BoinEditNS {
         }
 
         /// <summary>
-        /// Attempts to save the specified text to the BoinFile's path. Upon failure, hows a MessageBox with the exception.
+        /// Attempts to save the specified text to the BoinFile's path. Upon failure, shows a MessageBox with the exception.
         /// </summary>
         /// <param name="text">Text to save</param>
         /// <returns>false upon failure</returns>
@@ -126,13 +135,13 @@ namespace BoinEditNS {
         /// </summary>
         /// <param name="path">file path</param>
         /// <returns>true if successful</returns>
-        public bool saveToScratch(string path) {
+        public bool saveToScratch() {
             try {
-                if (!Directory.Exists(path)) {
-                    Directory.CreateDirectory(path);
+                if (!Directory.Exists(this._scratchFile.FullName)) {
+                    Directory.CreateDirectory(this._scratchFile.FullName);
                 }
 
-                saveQuiet(this.content, path);
+                saveQuiet(this.content, this._scratchFile.FullName);
                 return true;
             } catch {
                 return false;

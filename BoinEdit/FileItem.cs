@@ -22,7 +22,7 @@ namespace BoinEditNS {
         #region Public Vars
 
         public BoinFile file {
-            get { return this._file; }
+            get { return  this._file; }
         }
 
         public bool isOpen {
