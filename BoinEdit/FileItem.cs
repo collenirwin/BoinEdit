@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
+using System.Text;
+using FastColoredTextBoxNS;
 
 namespace BoinEditNS {
     public partial class FileItem : UserControl {
 
         #region Private Vars
 
-        BoinFile _file;
+        FileInfo _file;
+        FileInfo _scratchFile;
+
+        FastColoredTextBox _textBox;
+
         bool _isOpen;
+        bool _isSaved;
+
+        bool _init = false;
+        bool _scratchIOFailed = false;
 
         Color _closeForeColor = Color.FromArgb(255, 74, 74, 74);
         Color _closeActiveForeColor = Color.FromArgb(255, 250, 250, 250);
-        //Color _activeBackColor = Color.FromArgb(255, 86, 156, 214);
         Color _activeBackColor = Color.FromArgb(255, 74, 74, 74);
 
         Color _actualBackColor = Color.FromArgb(255, 60, 60, 60);
@@ -21,12 +31,27 @@ namespace BoinEditNS {
 
         #region Public Vars
 
-        public BoinFile file {
-            get { return  this._file; }
+        public event EventHandler fileButtonClick;
+        public event EventHandler closeButtonClick;
+
+        public FileInfo file {
+            get { return this._file; }
+        }
+
+        public FileInfo scratchFile {
+            get { return this._scratchFile; }
+        }
+
+        public FastColoredTextBox textBox {
+            get { return this._textBox; }
         }
 
         public bool isOpen {
             get { return this._isOpen; }
+        }
+
+        public bool isSaved {
+            get { return this._isSaved; }
         }
 
         public Color closeForeColor {
@@ -50,13 +75,192 @@ namespace BoinEditNS {
 
         #region Public
 
-        public FileItem(BoinFile file) {
+        public FileItem(FileInfo file, FastColoredTextBox textBox, bool isSaved) {
             InitializeComponent();
 
-            this._file = file;
-            this.btnFile.Text = _file.name;
+            this._textBox = textBox;
 
+            if (isSaved) {
+                this._file = file;
+                this.btnFile.Text = file.Name;
+
+                // dispose self if we can't open the file
+                if (!this.openFile()) {
+                    this._dispose();
+                    return;
+                }
+
+            } else {
+                genFile();
+            }
+
+            // add textchanged event
+            textBox.TextChanged += new EventHandler<TextChangedEventArgs>(this.textBox_TextChanged);
             this._actualBackColor = this.BackColor; // temp backcolor
+            this.open();
+            this._init = true; // done initializing
+        }
+
+        /// <summary>
+        /// Shows FileItem.textBox, sets colors to active
+        /// </summary>
+        public void open() {
+            if (!this.isOpen) {
+                this._isOpen = true;
+
+                this.textBox.Show();
+
+                this.btnClose.BackColor = this._activeBackColor;
+                this.btnFile.BackColor = this._activeBackColor;
+            }
+        }
+
+        /// <summary>
+        /// Hides FileItem.textBox, sets colors to normal
+        /// </summary>
+        public void close() {
+            if (this._isOpen) {
+                this._isOpen = false;
+
+                this.textBox.Hide();
+
+                this.btnClose.BackColor = _actualBackColor;
+                this.btnFile.BackColor  = _actualBackColor;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to open FileItem.file contents into FileItem.textBox.Text
+        /// </summary>
+        /// <returns>true if opened successfully</returns>
+        public bool openFile() {
+            try {
+                this._init = false;
+                this.textBox.OpenFile(this.file.FullName);
+                this._init = true;
+                return true;
+            } catch (Exception ex) {
+                MessageBox.Show("Failed to open " + this.file.Name + " with the following message:\r\n  " + ex.Message, Constants.CAPTION_ERROR);
+                this._init = true;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to save the FileItem.file
+        /// </summary>
+        /// <param name="alert">If true, alerts at failure</param>
+        /// <returns>true if saved successfully</returns>
+        public bool save(bool alert = false) {
+            if (!this._save(this.file.FullName)) {
+                if (alert) {
+                    MessageBox.Show("Failed to save " + this.file.Name + ".", Constants.CAPTION_ERROR);
+                }
+
+                return false;
+            }
+
+            this._isSaved = true;
+            btnClose.Text = "";
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to save FileItem.textBox.Text to a new path, then sets FileItem.file to the new file
+        /// </summary>
+        /// <param name="newPath">Path for new file</param>
+        /// <param name="alert">If true, alerts at failure</param>
+        /// <returns>true if saved successfully</returns>
+        public bool saveAs(string newPath, bool alert = false) {
+            if (!this._save(newPath)) {
+                if (alert) {
+                    MessageBox.Show("Failed to save " + newPath + ".", Constants.CAPTION_ERROR);
+                }
+
+                return false;
+            }
+
+            this._file = new FileInfo(newPath);
+            this.btnFile.Text = this.file.Name;
+
+            this._isSaved = true;
+            btnClose.Text = "";
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to save to FileItem.scratchFile, creates one if not already there
+        /// </summary>
+        /// <returns>true if saved successfully</returns>
+        public bool saveScratch() {
+            return genScratchFile(this.file.FullName, false);
+        }
+
+        #endregion
+
+        #region Private
+
+        private bool _save(string path) {
+            try {
+                this.textBox.SaveToFile(path, Encoding.UTF8);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        private void genFile() {
+            string name = "untitled" + Utils.getUnnamedFileCount();
+
+            genScratchFile(name, true);
+            this.btnFile.Text = name;
+        }
+
+        private bool genScratchFile(string fileNameOrPath, bool isNew) {
+            DirectoryInfo scdir = (isNew) ? Utils.scratchNewDir : Utils.scratchDir;
+
+            // make sure directory is created
+            if (Utils.safeGenDir(scdir)) {
+
+                // create a hashed filename/path
+                string hashPath = scdir.FullName + "\\" + Utils.getHash(fileNameOrPath);
+
+                // save to scratch dir
+                if (!this._save(hashPath)) {
+                    warnScratchIOFailed();
+                    return false;
+                }
+
+                this._scratchFile = new FileInfo(hashPath);
+                return true;
+            }
+
+            warnScratchIOFailed();
+            return false;
+        }
+
+        private void warnScratchIOFailed() {
+
+            // only warn once
+            if (_scratchIOFailed) {
+                MessageBox.Show("Warning: failed to create a scratchfile. This could mean that BoinEdit does not have read/write access to " +
+                    Utils.scratchDir.FullName,
+                    Constants.CAPTION_DEFAULT
+                );
+
+                _scratchIOFailed = true;
+            }
+        }
+
+        #endregion
+
+        #region Events & Event Overrides
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e) {
+            if (this._init) {
+                this._isSaved = false;
+                this.btnClose.Text = "■";
+            }
         }
 
         protected override void OnBackColorChanged(EventArgs e) {
@@ -67,54 +271,29 @@ namespace BoinEditNS {
             this.btnFile.BackColor = this.BackColor;
         }
 
-        /// <summary>
-        /// Opens the file into the specified FastColoredTextBox
-        /// </summary>
-        /// <param name="txtbox"></param>
-        public void open(FastColoredTextBoxNS.FastColoredTextBox txtbox) {
-            if (!this._file.isOpen) {
-                this._file.open();
-            }
-
-            txtbox.Clear();
-            txtbox.AppendText(this._file.content);
-
-            this._isOpen = true;
-
-            this.btnClose.BackColor = this._activeBackColor;
-            this.btnFile.BackColor = this._activeBackColor;
-        }
-
-        /// <summary>
-        /// Sets the backColor back to normal
-        /// </summary>
-        public void close() {
-            if (this._isOpen) {
-                this._isOpen = false;
-
-                this.btnClose.BackColor = _actualBackColor;
-                this.btnFile.BackColor = _actualBackColor;
-            }
-        }
-
-        #endregion
-
-        #region Private
-
         private void btnClose_MouseEnter(object sender, EventArgs e) {
             btnClose.Text = "X";
             btnClose.ForeColor = closeActiveForeColor;
         }
 
         private void btnClose_MouseLeave(object sender, EventArgs e) {
-            btnClose.Text = (_file.isSaved) ? "" : "■";
+            btnClose.Text = (this.isSaved) ? "" : "■";
             btnClose.ForeColor = closeForeColor;
         }
 
-        private void btnClose_Click(object sender, EventArgs e) {
-            if (!_file.isSaved) { // ask
+        private void _dispose() {
+            this.textBox.Dispose();
+            this.Dispose();
+        }
+
+        protected void btnClose_Click(object sender, EventArgs e) {
+            if (this.closeButtonClick != null) {
+                this.closeButtonClick(this, e);
+            }
+
+            if (!this.isSaved) { // ask
                 DialogResult result = MessageBox.Show(
-                    "Save " + _file.name + " before closing?",
+                    "Save " + this.file.Name + " before closing?",
                     Constants.CAPTION_DEFAULT,
                     MessageBoxButtons.YesNoCancel
                 );
@@ -122,15 +301,21 @@ namespace BoinEditNS {
                 if (result == DialogResult.Yes) {
 
                     // close if file saved properly
-                    if (_file.saveAlert()) {
-                        this.Dispose();
+                    if (save(true)) {
+                        this._dispose();
                     }
 
                 } else if (result == DialogResult.No) {
-                    this.Dispose();
+                    this._dispose();
                 } // else, don't do anything
             } else { // close
-                this.Dispose();
+                this._dispose();
+            }
+        }
+
+        protected void btnFile_Click(object sender, EventArgs e) {
+            if (this.fileButtonClick != null) {
+                this.fileButtonClick(this, e);
             }
         }
 

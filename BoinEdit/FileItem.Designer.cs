@@ -59,6 +59,7 @@
             this.btnFile.Text = "filename.extension";
             this.btnFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFile.UseVisualStyleBackColor = false;
+            this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
             // 
             // btnClose
             // 

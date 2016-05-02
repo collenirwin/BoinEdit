@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Open Directory");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Open Directory");
             this.msMain = new System.Windows.Forms.MenuStrip();
             this.tsiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +67,7 @@
             this.tsiVB = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiXML = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiFilePath = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtMain = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.txtMainBase = new FastColoredTextBoxNS.FastColoredTextBox();
             this.cmsTextEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +89,7 @@
             this.fsWatcher = new System.IO.FileSystemWatcher();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
             this.msMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtMain)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMainBase)).BeginInit();
             this.cmsTextEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerFull)).BeginInit();
             this.splitContainerFull.Panel1.SuspendLayout();
@@ -455,10 +455,10 @@
             this.tsiFilePath.ToolTipText = "Open in Windows Explorer";
             this.tsiFilePath.Click += new System.EventHandler(this.tsiFilePath_Click);
             // 
-            // txtMain
+            // txtMainBase
             // 
-            this.txtMain.AutoCompleteBrackets = true;
-            this.txtMain.AutoCompleteBracketsList = new char[] {
+            this.txtMainBase.AutoCompleteBrackets = true;
+            this.txtMainBase.AutoCompleteBracketsList = new char[] {
         '(',
         ')',
         '{',
@@ -469,40 +469,39 @@
         '\"',
         '\'',
         '\''};
-            this.txtMain.AutoIndentCharsPatterns = "\n^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\n";
-            this.txtMain.AutoScrollMinSize = new System.Drawing.Size(395, 119);
-            this.txtMain.BackBrush = null;
-            this.txtMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.txtMain.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
-            this.txtMain.CharHeight = 17;
-            this.txtMain.CharWidth = 8;
-            this.txtMain.ContextMenuStrip = this.cmsTextEdit;
-            this.txtMain.CurrentLineColor = System.Drawing.Color.Silver;
-            this.txtMain.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtMain.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.txtMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtMain.FoldingIndicatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(74)))), ((int)(((byte)(74)))), ((int)(((byte)(74)))));
-            this.txtMain.Font = new System.Drawing.Font("Consolas", 11.25F);
-            this.txtMain.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.txtMain.IndentBackColor = System.Drawing.Color.Transparent;
-            this.txtMain.IsReplaceMode = false;
-            this.txtMain.LeftBracket = '(';
-            this.txtMain.LeftBracket2 = '{';
-            this.txtMain.LineNumberColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
-            this.txtMain.Location = new System.Drawing.Point(0, 0);
-            this.txtMain.Name = "txtMain";
-            this.txtMain.Paddings = new System.Windows.Forms.Padding(0);
-            this.txtMain.PreferredLineWidth = 30;
-            this.txtMain.RightBracket = ')';
-            this.txtMain.RightBracket2 = '}';
-            this.txtMain.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(30)))), ((int)(((byte)(144)))), ((int)(((byte)(255)))));
-            this.txtMain.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("txtMain.ServiceColors")));
-            this.txtMain.ServiceLinesColor = System.Drawing.Color.Transparent;
-            this.txtMain.Size = new System.Drawing.Size(598, 266);
-            this.txtMain.TabIndex = 0;
-            this.txtMain.Text = "// test.js\r\n// Collen Irwin\r\n\r\nfunction test(arg1, arg2) {\r\n    document.write(ar" +
-    "g1.toString() + \"Hello\");\r\n    alert(1028);\r\n}";
-            this.txtMain.Zoom = 100;
+            this.txtMainBase.AutoIndentCharsPatterns = "\n^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\n";
+            this.txtMainBase.AutoScrollMinSize = new System.Drawing.Size(27, 17);
+            this.txtMainBase.BackBrush = null;
+            this.txtMainBase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.txtMainBase.BracketsHighlightStrategy = FastColoredTextBoxNS.BracketsHighlightStrategy.Strategy2;
+            this.txtMainBase.CharHeight = 17;
+            this.txtMainBase.CharWidth = 8;
+            this.txtMainBase.ContextMenuStrip = this.cmsTextEdit;
+            this.txtMainBase.CurrentLineColor = System.Drawing.Color.Silver;
+            this.txtMainBase.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtMainBase.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.txtMainBase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtMainBase.FoldingIndicatorColor = System.Drawing.Color.FromArgb(((int)(((byte)(74)))), ((int)(((byte)(74)))), ((int)(((byte)(74)))));
+            this.txtMainBase.Font = new System.Drawing.Font("Consolas", 11.25F);
+            this.txtMainBase.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.txtMainBase.IndentBackColor = System.Drawing.Color.Transparent;
+            this.txtMainBase.IsReplaceMode = false;
+            this.txtMainBase.LeftBracket = '(';
+            this.txtMainBase.LeftBracket2 = '{';
+            this.txtMainBase.LineNumberColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
+            this.txtMainBase.Location = new System.Drawing.Point(0, 0);
+            this.txtMainBase.Name = "txtMainBase";
+            this.txtMainBase.Paddings = new System.Windows.Forms.Padding(0);
+            this.txtMainBase.PreferredLineWidth = 30;
+            this.txtMainBase.RightBracket = ')';
+            this.txtMainBase.RightBracket2 = '}';
+            this.txtMainBase.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(30)))), ((int)(((byte)(144)))), ((int)(((byte)(255)))));
+            this.txtMainBase.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("txtMainBase.ServiceColors")));
+            this.txtMainBase.ServiceLinesColor = System.Drawing.Color.Transparent;
+            this.txtMainBase.Size = new System.Drawing.Size(598, 266);
+            this.txtMainBase.TabIndex = 0;
+            this.txtMainBase.Visible = false;
+            this.txtMainBase.Zoom = 100;
             // 
             // cmsTextEdit
             // 
@@ -624,10 +623,10 @@
             this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
             this.lstDir.Location = new System.Drawing.Point(0, 45);
             this.lstDir.Name = "lstDir";
-            treeNode3.Name = "nodOpenDir";
-            treeNode3.Text = "Open Directory";
+            treeNode1.Name = "nodOpenDir";
+            treeNode1.Text = "Open Directory";
             this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.lstDir.Size = new System.Drawing.Size(150, 325);
             this.lstDir.TabIndex = 2;
             this.lstDir.TabStop = false;
@@ -698,7 +697,7 @@
             // 
             // splitContainerEditConsole.Panel1
             // 
-            this.splitContainerEditConsole.Panel1.Controls.Add(this.txtMain);
+            this.splitContainerEditConsole.Panel1.Controls.Add(this.txtMainBase);
             // 
             // splitContainerEditConsole.Panel2
             // 
@@ -723,7 +722,6 @@
             // sfdSave
             // 
             this.sfdSave.Title = "Save As... - BoinEdit";
-            this.sfdSave.FileOk += new System.ComponentModel.CancelEventHandler(this.sfdSave_FileOk);
             // 
             // Form1
             // 
@@ -738,7 +736,7 @@
             this.Text = "BoinEdit";
             this.msMain.ResumeLayout(false);
             this.msMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtMain)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtMainBase)).EndInit();
             this.cmsTextEdit.ResumeLayout(false);
             this.splitContainerFull.Panel1.ResumeLayout(false);
             this.splitContainerFull.Panel1.PerformLayout();
@@ -770,7 +768,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsiExit;
         private System.Windows.Forms.ToolStripMenuItem tsiEdit;
         private System.Windows.Forms.ToolStripMenuItem tsiSettings;
-        private FastColoredTextBoxNS.FastColoredTextBox txtMain;
+        private FastColoredTextBoxNS.FastColoredTextBox txtMainBase;
         private System.Windows.Forms.ToolStripMenuItem tsiUndo;
         private System.Windows.Forms.ToolStripMenuItem tsiRedo;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;

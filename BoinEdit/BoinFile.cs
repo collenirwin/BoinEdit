@@ -1,8 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using FastColoredTextBoxNS;
 
 namespace BoinEditNS {
+
+    /// <summary>
+    /// Deprecated.
+    /// </summary>
     public class BoinFile {
 
         #region Private Vars
@@ -34,7 +39,7 @@ namespace BoinEditNS {
         public string path {
             get { return this._path; }
         }
-        
+
         /// <summary>
         /// DirectoryInfo bject containing information on the file's parent directory
         /// </summary>
@@ -76,7 +81,7 @@ namespace BoinEditNS {
         /// Scratchfile FileInfo - So we can keep files open between sessions without saving
         /// </summary>
         public FileInfo scratchFile {
-            get { return  this._scratchFile; }
+            get { return this._scratchFile; }
             set { this._scratchFile = value; }
         }
 
@@ -112,13 +117,18 @@ namespace BoinEditNS {
         /// <summary>
         /// Attempts to save the specified text to the BoinFile's path. Upon failure, shows a MessageBox with the exception.
         /// </summary>
-        /// <param name="text">Text to save</param>
+        /// <param name="textBox">Optional FastColoredTextBox content</param>
         /// <returns>false upon failure</returns>
-        public bool saveAlert() {
+        public bool saveAlert(FastColoredTextBox textBox = null) {
             string msg = "Failed to save " + _name + " with the following message:\r\n  ";
+
+            if (textBox != null) {
+                this.content = textBox.Text;
+            }
 
             try {
                 saveQuiet(this.content, this.path);
+                this._isSaved = true;
                 return true;
             } catch (IOException ex) { // IO specific exception
                 msg += ex.Message;
@@ -129,7 +139,7 @@ namespace BoinEditNS {
             MessageBox.Show(msg, Constants.CAPTION_ERROR);
             return false;
         }
-        
+
         /// <summary>
         /// Save to a scratchfile
         /// </summary>
