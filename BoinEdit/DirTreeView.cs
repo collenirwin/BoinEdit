@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace BoinEditNS {
     public partial class DirTreeView : TreeView {
 
         #region Private Vars
-
+        
         bool _hasDir = false;
         DirectoryInfo _directory;
         Color _dirColor  = Color.FromArgb(255, 60, 60, 60);
@@ -130,6 +131,7 @@ namespace BoinEditNS {
                     if (di.Exists) {
                         TreeNode itm = new TreeNode();
                         itm.NodeFont = new Font(this.Font, FontStyle.Bold);
+                        itm.ForeColor = Color.FromArgb(255, 150, 150, 150);
                         itm.Text = di.Name + "\\";
                         itm.Tag = di;
                         itm.BackColor = _dirColor;
@@ -164,7 +166,7 @@ namespace BoinEditNS {
                 }
 
                 return true;
-            } catch (Exception ex) {
+            } catch {
                 return false;
             }
         }

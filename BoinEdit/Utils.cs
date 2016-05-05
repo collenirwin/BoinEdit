@@ -48,10 +48,20 @@ namespace BoinEditNS {
             return name;
         }
 
-        public static bool hashesMatch(string value, string hashedValue) {
-            string hashOfInput = getHash(value).ToLower();
+        public static bool hashesMatch(string plainValue, string hashedValue) {
+            string hashOfInput = getHash(plainValue).ToLower();
             
             return (hashOfInput == hashedValue.ToLower());
+        }
+
+        public static void purgeNewScratchFiles() {
+            if (safeGenDir(scratchNewDir)) {
+                foreach (FileInfo file in scratchNewDir.GetFiles()) {
+                    try {
+                        file.Delete();
+                    } catch { }
+                }
+            }
         }
     }
 }

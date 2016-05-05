@@ -23,9 +23,11 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.panel = new System.Windows.Forms.Panel();
             this.btnFile = new BoinBoxNS.BoinBox();
             this.btnClose = new BoinBoxNS.BoinBox();
+            this.ttPath = new System.Windows.Forms.ToolTip(this.components);
             this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -41,7 +43,6 @@
             // 
             // btnFile
             // 
-            this.btnFile.AutoEllipsis = true;
             this.btnFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.btnFile.BorderColor = System.Drawing.Color.Empty;
             this.btnFile.BorderSize = 0;
@@ -56,10 +57,12 @@
             this.btnFile.Name = "btnFile";
             this.btnFile.Size = new System.Drawing.Size(189, 21);
             this.btnFile.TabIndex = 1;
+            this.btnFile.TabStop = false;
             this.btnFile.Text = "filename.extension";
             this.btnFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnFile.UseVisualStyleBackColor = false;
             this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
+            this.btnFile.MouseEnter += new System.EventHandler(this.btnFile_MouseEnter);
             // 
             // btnClose
             // 
@@ -77,6 +80,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(25, 21);
             this.btnClose.TabIndex = 0;
+            this.btnClose.TabStop = false;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             this.btnClose.Enter += new System.EventHandler(this.btnClose_MouseEnter);
@@ -102,5 +106,6 @@
         private System.Windows.Forms.Panel panel;
         public BoinBoxNS.BoinBox btnFile;
         public BoinBoxNS.BoinBox btnClose;
+        private System.Windows.Forms.ToolTip ttPath;
     }
 }

@@ -13,7 +13,7 @@ namespace BoinEditNS {
         FileInfo _file;
         FileInfo _scratchFile;
 
-        FastColoredTextBox _textBox;
+        BoinEditBox _editBox;
 
         bool _isOpen;
         bool _isSaved;
@@ -21,7 +21,7 @@ namespace BoinEditNS {
         bool _init = false;
         bool _scratchIOFailed = false;
 
-        Color _closeForeColor = Color.FromArgb(255, 74, 74, 74);
+        Color _closeForeColor = Color.FromArgb(255, 200, 200, 200);
         Color _closeActiveForeColor = Color.FromArgb(255, 250, 250, 250);
         Color _activeBackColor = Color.FromArgb(255, 74, 74, 74);
 
@@ -42,8 +42,8 @@ namespace BoinEditNS {
             get { return this._scratchFile; }
         }
 
-        public FastColoredTextBox textBox {
-            get { return this._textBox; }
+        public BoinEditBox editBox {
+            get { return this._editBox; }
         }
 
         public bool isOpen {
@@ -75,14 +75,15 @@ namespace BoinEditNS {
 
         #region Public
 
-        public FileItem(FileInfo file, FastColoredTextBox textBox, bool isSaved) {
+        public FileItem(FileInfo file, bool isSaved) {
             InitializeComponent();
 
-            this._textBox = textBox;
+            this._isSaved = isSaved;
 
             if (isSaved) {
                 this._file = file;
                 this.btnFile.Text = file.Name;
+                this._editBox = new BoinEditBox(this);
 
                 // dispose self if we can't open the file
                 if (!this.openFile()) {
@@ -95,7 +96,7 @@ namespace BoinEditNS {
             }
 
             // add textchanged event
-            textBox.TextChanged += new EventHandler<TextChangedEventArgs>(this.textBox_TextChanged);
+            editBox.textBox.TextChanged += new EventHandler<TextChangedEventArgs>(this.textBox_TextChanged);
             this._actualBackColor = this.BackColor; // temp backcolor
             this.open();
             this._init = true; // done initializing
@@ -108,7 +109,8 @@ namespace BoinEditNS {
             if (!this.isOpen) {
                 this._isOpen = true;
 
-                this.textBox.Show();
+                this.editBox.Show();
+                this.editBox.BringToFront();
 
                 this.btnClose.BackColor = this._activeBackColor;
                 this.btnFile.BackColor = this._activeBackColor;
@@ -122,7 +124,7 @@ namespace BoinEditNS {
             if (this._isOpen) {
                 this._isOpen = false;
 
-                this.textBox.Hide();
+                this.editBox.Hide();
 
                 this.btnClose.BackColor = _actualBackColor;
                 this.btnFile.BackColor  = _actualBackColor;
@@ -136,7 +138,7 @@ namespace BoinEditNS {
         public bool openFile() {
             try {
                 this._init = false;
-                this.textBox.OpenFile(this.file.FullName);
+                this.editBox.textBox.OpenFile(this.file.FullName);
                 this._init = true;
                 return true;
             } catch (Exception ex) {
@@ -152,16 +154,26 @@ namespace BoinEditNS {
         /// <param name="alert">If true, alerts at failure</param>
         /// <returns>true if saved successfully</returns>
         public bool save(bool alert = false) {
-            if (!this._save(this.file.FullName)) {
-                if (alert) {
-                    MessageBox.Show("Failed to save " + this.file.Name + ".", Constants.CAPTION_ERROR);
+            if (this.file != null) {
+                if (!this._save(this.file.FullName)) {
+                    if (alert) {
+                        MessageBox.Show("Failed to save " + this.file.Name + ".", Constants.CAPTION_ERROR);
+                    }
+
+                    return false;
                 }
 
-                return false;
-            }
+            } else {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Title = "Save As... - BoinEdit";
+                sfd.FileName = this.btnFile.Text;
+                sfd.AddExtension = false;
 
-            this._isSaved = true;
-            btnClose.Text = "";
+                if (sfd.ShowDialog() == DialogResult.OK) {
+                    saveAs(sfd.FileName, true);
+                }
+            }
+            
             return true;
         }
 
@@ -182,9 +194,6 @@ namespace BoinEditNS {
 
             this._file = new FileInfo(newPath);
             this.btnFile.Text = this.file.Name;
-
-            this._isSaved = true;
-            btnClose.Text = "";
             return true;
         }
 
@@ -202,7 +211,9 @@ namespace BoinEditNS {
 
         private bool _save(string path) {
             try {
-                this.textBox.SaveToFile(path, Encoding.UTF8);
+                this.editBox.textBox.SaveToFile(path, Encoding.UTF8);
+                this._isSaved = true;
+                btnClose.Text = "";
                 return true;
             } catch {
                 return false;
@@ -211,9 +222,10 @@ namespace BoinEditNS {
 
         private void genFile() {
             string name = "untitled" + Utils.getUnnamedFileCount();
+            this.btnFile.Text = name;
+            this._editBox = new BoinEditBox(this);
 
             genScratchFile(name, true);
-            this.btnFile.Text = name;
         }
 
         private bool genScratchFile(string fileNameOrPath, bool isNew) {
@@ -266,9 +278,17 @@ namespace BoinEditNS {
         protected override void OnBackColorChanged(EventArgs e) {
             base.OnBackColorChanged(e);
 
-            this._actualBackColor = this.BackColor;
+            this._actualBackColor   = this.BackColor;
             this.btnClose.BackColor = this.BackColor;
-            this.btnFile.BackColor = this.BackColor;
+            this.btnFile.BackColor  = this.BackColor;
+        }
+
+        private void btnFile_MouseEnter(object sender, EventArgs e) {
+            if (this.file != null && this.file.Exists) {
+                ttPath.SetToolTip(btnFile, this.file.FullName);
+            } else {
+                ttPath.RemoveAll();
+            }
         }
 
         private void btnClose_MouseEnter(object sender, EventArgs e) {
@@ -282,7 +302,7 @@ namespace BoinEditNS {
         }
 
         private void _dispose() {
-            this.textBox.Dispose();
+            this.editBox.Dispose();
             this.Dispose();
         }
 
@@ -291,9 +311,15 @@ namespace BoinEditNS {
                 this.closeButtonClick(this, e);
             }
 
+            // new unedited file, just delete it
+            if (!this.isSaved && this.file == null && this.editBox.textBox.Text.Trim() == "") {
+                this._dispose();
+                return;
+            }
+
             if (!this.isSaved) { // ask
                 DialogResult result = MessageBox.Show(
-                    "Save " + this.file.Name + " before closing?",
+                    "Save " + this.btnFile.Text + " before closing?",
                     Constants.CAPTION_DEFAULT,
                     MessageBoxButtons.YesNoCancel
                 );

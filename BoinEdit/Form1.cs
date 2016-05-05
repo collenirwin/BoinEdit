@@ -1,11 +1,8 @@
 ﻿using FastColoredTextBoxNS;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace BoinEditNS {
     public partial class Form1 : Form {
@@ -13,7 +10,6 @@ namespace BoinEditNS {
         #region Vars
 
         FileItem activeFileItem;
-        DirectoryInfo scratchDirectory = new DirectoryInfo("scratch");
 
         #endregion
 
@@ -22,78 +18,30 @@ namespace BoinEditNS {
         public Form1() {
             InitializeComponent();
 
-            // Bracket highlight backcolor for when the caret is touching brackets
-            txtMainBase.BracketsStyle  = new MarkerStyle(new SolidBrush(Color.FromArgb(100, 86, 156, 214)));
-            txtMainBase.BracketsStyle2 = new MarkerStyle(new SolidBrush(Color.FromArgb(100, 86, 156, 214)));
+            // empty the new scratchfile dir
+            Utils.purgeNewScratchFiles();
 
-            // For multiline comments
-            txtMainBase.HighlightingRangeType = HighlightingRangeType.AllTextRange;
-
-            // Initialize all Dictionaries in Dict
+            // initialize all Dictionaries in Dict
             Dicts.init();
+
+            // set colors for msMain
+            msMain.Renderer = new ToolStripProfessionalRenderer(new MenuColorTable());
+
+            // add a new file
+            addFile(newFile());
         }
 
         #region TextBox Events & Related Methods
 
-        private FastColoredTextBox cloneBaseTextBox() {
-            FastColoredTextBox tb = new FastColoredTextBox();
-
-            splitContainerEditConsole.Panel1.Controls.Add(tb);
-
-            #region Designer Code
-
-            tb.AutoCompleteBrackets = true;
-            tb.AutoCompleteBracketsList = new char[] {
-                '(',
-                ')',
-                '{',
-                '}',
-                '[',
-                ']',
-                '\"',
-                '\"',
-                '\'',
-                '\''
-            };
-
-            tb.AutoIndentCharsPatterns = "\n^\\s*[\\w\\.]+(\\s\\w+)?\\s*(?<range>=)\\s*(?<range>[^;]+);\n";
-            tb.AutoScrollMinSize = new Size(27, 17);
-            tb.BackColor = txtMainBase.BackColor;
-            tb.BracketsHighlightStrategy = BracketsHighlightStrategy.Strategy2;
-            tb.CharHeight = 17;
-            tb.CharWidth = 8;
-            tb.ContextMenuStrip = this.cmsTextEdit;
-            tb.CurrentLineColor = Color.Silver;
-            tb.Dock = DockStyle.Fill;
-            tb.FoldingIndicatorColor = txtMainBase.FoldingIndicatorColor;
-            tb.Font = txtMainBase.Font;
-            tb.ForeColor = txtMainBase.ForeColor;
-            tb.IndentBackColor = Color.Transparent;
-            tb.IsReplaceMode = false;
-            tb.LeftBracket = '(';
-            tb.LeftBracket2 = '{';
-            tb.LineNumberColor = txtMainBase.LineNumberColor;
-            tb.PreferredLineWidth = 30;
-            tb.RightBracket = ')';
-            tb.RightBracket2 = '}';
-            tb.SelectionColor = txtMainBase.SelectionColor;
-            tb.ServiceColors = txtMainBase.ServiceColors;
-            tb.ServiceLinesColor = Color.Transparent;
-            tb.TabIndex = 0;
-            tb.Visible = false;
-            tb.Zoom = 100;
-
-            #endregion
-
-            return tb;
-        }
-
+        
         #endregion
 
         #region SplitContainer Events & Related Methods
 
         private void splitContainerFull_SplitterMoved(object sender, SplitterEventArgs e) {
-            txtMainBase.Focus();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Focus();
+            }
         }
 
         #endregion
@@ -101,6 +49,11 @@ namespace BoinEditNS {
         #region ToolStrip Events & Related Methods
 
         #region File
+
+        // New File
+        private void tsiNew_Click(object sender, EventArgs e) {
+            addFile(newFile());
+        }
 
         // Open File
         private void tsiOpen_Click(object sender, EventArgs e) {
@@ -135,9 +88,12 @@ namespace BoinEditNS {
 
         // Print
         private void printToolStripMenuItem_Click(object sender, EventArgs e) {
-            PrintDialogSettings pds = new PrintDialogSettings();
-            pds.ShowPageSetupDialog = true; // Show a print preview dialog before printing
-            txtMainBase.Print(pds);
+            if (activeFileItem != null) {
+                PrintDialogSettings pds = new PrintDialogSettings();
+                pds.ShowPageSetupDialog = true; // Show a print preview dialog before printing
+                activeFileItem.editBox.textBox.Print(pds);
+            }
+           
         }
 
         // Exit
@@ -151,27 +107,58 @@ namespace BoinEditNS {
 
         // Undo
         private void tsiUndo_Click(object sender, EventArgs e) {
-            txtMainBase.Undo();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Undo();
+            }
         }
 
         // Redo
         private void tsiRedo_Click(object sender, EventArgs e) {
-            txtMainBase.Redo();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Redo();
+            }
         }
 
         // Cut
         private void tsiCut_Click(object sender, EventArgs e) {
-            txtMainBase.Cut();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Cut();
+            }
         }
 
         // Copy
         private void tsiCopy_Click(object sender, EventArgs e) {
-            txtMainBase.Copy();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Copy();
+            }
         }
 
         // Paste
         private void tsiPaste_Click(object sender, EventArgs e) {
-            txtMainBase.Paste();
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.Paste();
+            }
+        }
+
+        // Find
+        private void tsiFind_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.ShowFindDialog();
+            }
+        }
+
+        // Find + Replace
+        private void tsiFindReplace_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.ShowReplaceDialog();
+            }
+        }
+
+        // Go To
+        private void goToToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.textBox.ShowGoToDialog();
+            }
         }
 
         #endregion
@@ -186,42 +173,6 @@ namespace BoinEditNS {
         // Toggle Console
         private void tsiConsole_Click(object sender, EventArgs e) {
             splitContainerEditConsole.Panel2Collapsed = !tsiConsole.Checked;
-        }
-
-        #endregion
-
-        #region FilePath
-
-        // Attempt to open the path in windows explorer
-        private void tsiFilePath_Click(object sender, EventArgs e) {
-            string path = tsiFilePath.Tag.ToString();
-
-            try {
-                Process.Start("explorer.exe", path);
-            } catch (Exception ex) {
-                MessageBox.Show(
-                    "Failed to open folder with the following message:\n  " +
-                    ex.Message,
-                    Constants.CAPTION_ERROR);
-            }
-        }
-
-        #endregion
-
-        #region Language
-
-        // Change the language of the FCTB
-        private void changeLanguage(string newLanguage) {
-            bool hasLanguage = Dicts.languageMap.ContainsKey(newLanguage);
-            txtMainBase.Language = (hasLanguage) ? Dicts.languageMap[newLanguage] : Language.Custom;
-            tsiLanguage.Text = (hasLanguage) ? newLanguage : "Plain Text";
-
-            txtMainBase.ClearStylesBuffer();
-            txtMainBase.OnSyntaxHighlight(new TextChangedEventArgs(txtMainBase.Range));
-        }
-
-        private void languageTSI_Click(object sender, EventArgs e) {
-            changeLanguage((sender as ToolStripMenuItem).Text);
         }
 
         #endregion
@@ -254,7 +205,7 @@ namespace BoinEditNS {
                 } else if (!lstDir.SelectedNode.Text.EndsWith("\\")) { // file selected
                     try {
 
-                        FileItem fi = new FileItem(lstDir.SelectedNode.Tag as FileInfo, cloneBaseTextBox(), true);
+                        FileItem fi = new FileItem(lstDir.SelectedNode.Tag as FileInfo, true);
 
                         addFile(fi);
 
@@ -272,7 +223,11 @@ namespace BoinEditNS {
         // Closed a file
         private void pnlOpenFiles_ControlRemoved(object sender, ControlEventArgs e) {
             if (e.Control == activeFileItem) {
-                txtMainBase.Clear();
+                if (pnlOpenFiles.Controls.Count != 0) {
+                    openFileItem(pnlOpenFiles.Controls[0] as FileItem);
+                } else {
+                    addFile(newFile());
+                }
             }
         }
 
@@ -290,19 +245,26 @@ namespace BoinEditNS {
 
         #region File/Folder Methods
 
+        #region Opening
+
         private void addFile(FileItem file, bool open = true) {
-            foreach (Control c in pnlOpenFiles.Controls) {
-                var f = c as FileItem;
-                if ((f != null) && (f.file.FullName == file.file.FullName)) { // Already open
-                    openFileItem(f); // open it into the editor
-                    return;
+            if (file.isSaved) {
+                foreach (Control c in pnlOpenFiles.Controls) {
+                    var f = c as FileItem;
+                    if ((f != null) && (f.file != null) && (f.file.FullName == file.file.FullName)) { // Already open
+                        openFileItem(f); // open it into the editor
+                        return;
+                    }
                 }
             }
-
+            
             file.fileButtonClick += new EventHandler(fileItem_FileButtonClick);
 
             pnlOpenFiles.Controls.Add(file);
             file.Dock = DockStyle.Top;
+            
+            splitContainerEditConsole.Panel1.Controls.Add(file.editBox);
+            file.editBox.Dock = DockStyle.Fill;
 
             if (open) {
                 openFileItem(file);
@@ -316,15 +278,11 @@ namespace BoinEditNS {
 
             activeFileItem = fi;
             fi.open();
-            fi.textBox.Focus();
+            fi.editBox.textBox.Focus();
+        }
 
-            // set sytnax higlighting
-            string ext = Path.GetExtension(activeFileItem.file.Name);
-            if (Dicts.extensionMap.ContainsKey(ext)) {
-                changeLanguage(Dicts.extensionMap[ext]);
-            } else {
-                changeLanguage("");
-            }
+        private FileItem newFile() {
+            return new FileItem(null, false);
         }
 
         private void ofdOpen_FileOk(object sender, CancelEventArgs e) {
@@ -335,7 +293,7 @@ namespace BoinEditNS {
 
             foreach (string path in ofdOpen.FileNames) {
                 try {
-                    addFile(new FileItem(new FileInfo(path), cloneBaseTextBox(), true));
+                    addFile(new FileItem(new FileInfo(path), true));
                 } catch {
                     error += " " + path + "\r\n";
                     errorFlag = true;
@@ -363,6 +321,10 @@ namespace BoinEditNS {
             lstDir.openDir();
         }
 
+        #endregion
+
+        #region Saving
+
         private bool checkSave(FileItem fi) {
             if (fi != null && fi.file != null) { // save
                 return fi.save(true);
@@ -374,7 +336,7 @@ namespace BoinEditNS {
         }
 
         private bool saveAsPrompt(FileItem fi) {
-            sfdSave.FileName = fi.file.Name;
+            sfdSave.FileName = fi.btnFile.Text;
             if (sfdSave.ShowDialog() == DialogResult.OK) {
                 return fi.saveAs(sfdSave.FileName, true);
             }
@@ -391,6 +353,8 @@ namespace BoinEditNS {
                 }
             }
         }
+
+        #endregion
 
         #endregion
     }

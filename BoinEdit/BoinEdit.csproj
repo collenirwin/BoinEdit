@@ -57,20 +57,25 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoinBox.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BoinEditBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BoinEditBox.Designer.cs">
+      <DependentUpon>BoinEditBox.cs</DependentUpon>
     </Compile>
     <Compile Include="BoinFile.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Dicts.cs" />
     <Compile Include="DirTreeView.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="DirTreeViewWPF.xaml.cs">
-      <DependentUpon>DirTreeViewWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileItem.cs">
       <SubType>UserControl</SubType>
@@ -87,6 +92,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MenuColorTable.cs" />
     <Compile Include="PowerShellConsole.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -94,6 +100,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Theme.cs" />
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="BoinEditBox.resx">
+      <DependentUpon>BoinEditBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileItem.resx">
       <DependentUpon>FileItem.cs</DependentUpon>
     </EmbeddedResource>
@@ -126,12 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FastColoredTextBox.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="DirTreeViewWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <None Include="Resources\appbar.save.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
