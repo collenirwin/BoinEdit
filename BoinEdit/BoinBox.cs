@@ -7,40 +7,31 @@ namespace BoinBoxNS {
     [ToolboxItem(true)]
     public partial class BoinBox : Button {
 
+        bool antiAliased = false;
+
         public int BorderSize {
-            get {
-                return this.FlatAppearance.BorderSize;
-            }
-            set {
-                this.FlatAppearance.BorderSize = value;
-            }
+            get { return  this.FlatAppearance.BorderSize; }
+            set { this.FlatAppearance.BorderSize = value; }
         }
 
         public Color BorderColor {
-            get {
-                return this.FlatAppearance.BorderColor;
-            }
-            set {
-                this.FlatAppearance.BorderColor = value;
-            }
+            get { return  this.FlatAppearance.BorderColor; }
+            set { this.FlatAppearance.BorderColor = value; }
         }
 
         public Color MouseOverBackColor {
-            get {
-                return this.FlatAppearance.MouseOverBackColor;
-            }
-            set {
-                this.FlatAppearance.MouseOverBackColor = value;
-            }
+            get { return  this.FlatAppearance.MouseOverBackColor; }
+            set { this.FlatAppearance.MouseOverBackColor = value; }
         }
 
         public Color MouseDownBackColor {
-            get {
-                return this.FlatAppearance.MouseDownBackColor;
-            }
-            set {
-                this.FlatAppearance.MouseDownBackColor = value;
-            }
+            get { return  this.FlatAppearance.MouseDownBackColor; }
+            set { this.FlatAppearance.MouseDownBackColor = value; }
+        }
+
+        public bool AntiAliased {
+            get { return  this.antiAliased; }
+            set { this.antiAliased = value; }
         }
 
         public BoinBox() : base() {
@@ -52,7 +43,10 @@ namespace BoinBoxNS {
         }
 
         protected override void OnPaint(PaintEventArgs e) {
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+            if (AntiAliased) {
+                e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+            }
+
             base.OnPaint(e);
         }
     }

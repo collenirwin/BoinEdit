@@ -49,9 +49,9 @@ namespace BoinEditNS {
         }
 
         public static bool hashesMatch(string plainValue, string hashedValue) {
-            string hashOfInput = getHash(plainValue).ToLower();
+            string hashOfInput = getHash(plainValue);
             
-            return (hashOfInput == hashedValue.ToLower());
+            return (hashOfInput == hashedValue);
         }
 
         public static void purgeNewScratchFiles() {

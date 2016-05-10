@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.IO;
+﻿using FastColoredTextBoxNS;
+using System;
 using System.Diagnostics;
-using FastColoredTextBoxNS;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace BoinEditNS {
     public partial class BoinEditBox : UserControl {
@@ -17,6 +11,7 @@ namespace BoinEditNS {
         #region Private Vars
 
         FileItem _fileItem;
+        bool changeSaved = false;
 
         #endregion
 
@@ -37,6 +32,7 @@ namespace BoinEditNS {
         public BoinEditBox(FileItem fileItem) {
             InitializeComponent();
             this.fileItem = fileItem;
+            this.changeSaved = true;
 
             // Bracket highlight backcolor for when the caret is touching brackets
             textBox.BracketsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(100, 86, 156, 214)));
@@ -46,18 +42,20 @@ namespace BoinEditNS {
             textBox.HighlightingRangeType = HighlightingRangeType.AllTextRange;
         }
 
-        private void init() {
+        public void init() {
             if (this.fileItem != null) {
                 lblFileName.Text = this.fileItem.btnFile.Text;
 
                 if (this.fileItem.file != null && File.Exists(this.fileItem.file.FullName)) {
-                    btnPath.Text = this.fileItem.file.FullName.Replace("\\", " \\ ");
+                    btnPath.Text = this.fileItem.file.FullName; //this.fileItem.file.FullName.Replace("\\", " \\ ");
                 } else {
                     btnPath.Text = "No directory yet";
                 }
 
                 // put the path button in the correct location based on the width of the file label
                 btnPath.Left = lblFileName.Left + lblFileName.Width + 2;
+
+                this.fileItem.setSaved(this.fileItem.isSaved);
 
                 // show unsaved symbol if unsaved
                 btnSave.Text = (fileItem.isSaved) ? "" : Constants.UNSAVED_SYMBOL;
@@ -73,6 +71,31 @@ namespace BoinEditNS {
         }
 
         #endregion
+
+        #region TopBar
+
+        private void btnPath_Click(object sender, EventArgs e) {
+            string directory;
+            if (this.fileItem.file != null && File.Exists(this.fileItem.file.FullName)) {
+                directory = Path.GetDirectoryName(this.fileItem.file.FullName);
+
+                try {
+                    Process.Start("explorer.exe", directory);
+                } catch (Exception ex) {
+                    MessageBox.Show(
+                        "Failed to open the specified directory with the following message:\r\n  " +
+                        ex.Message,
+                        Constants.CAPTION_ERROR
+                    );
+                }
+            }
+
+            textBox.Focus();
+        }
+
+        #endregion
+
+        #region bottomBar
 
         #region Zoom
 
@@ -116,26 +139,15 @@ namespace BoinEditNS {
 
         #endregion
 
-        #region TopBar
+        #region TabSize
 
-        private void btnPath_Click(object sender, EventArgs e) {
-            string directory;
-            if (this.fileItem.file != null && File.Exists(this.fileItem.file.FullName)) {
-                directory = Path.GetDirectoryName(this.fileItem.file.FullName);
-
-                try {
-                    Process.Start("explorer.exe", directory);
-                } catch (Exception ex) {
-                    MessageBox.Show(
-                        "Failed to open the specified directory with the following message:\r\n  " +
-                        ex.Message,
-                        Constants.CAPTION_ERROR
-                    );
-                }
-            }
-
-            textBox.Focus();
+        private void tsiTabsItem_Click(object sender, EventArgs e) {
+            string tabsize = (sender as ToolStripMenuItem).Text;
+            tsiTabs.Text = "Tabsize: " + tabsize;
+            this.textBox.TabLength = Convert.ToInt32(tabsize);
         }
+
+        #endregion
 
         #endregion
 
@@ -173,6 +185,22 @@ namespace BoinEditNS {
             this.textBox.ShowGoToDialog();
         }
 
+        private void commentBlockToolStripMenuItem_Click(object sender, EventArgs e) {
+            commentBlock();
+        }
+
+        private void uncommentBlockToolStripMenuItem_Click(object sender, EventArgs e) {
+            unCommentBlock();
+        }
+
+        private void tabBlockInToolStripMenuItem_Click(object sender, EventArgs e) {
+            tabBlockIn();
+        }
+
+        private void tabBlockOutToolStripMenuItem_Click(object sender, EventArgs e) {
+            tabBlockOut();
+        }
+
         #endregion
 
         #region btnSave
@@ -190,6 +218,79 @@ namespace BoinEditNS {
         private void btnSave_MouseLeave(object sender, EventArgs e) {
             btnSave.BackgroundImage = null;
             btnSave.Text = (fileItem.isSaved) ? "" : Constants.UNSAVED_SYMBOL;
+        }
+
+        #endregion
+
+        #region textBox Stuff
+
+        public void openFile(string path) {
+            this.changeSaved = false;
+            textBox.OpenFile(path);
+            this.changeSaved = true;
+        }
+
+        private string replaceFirst(string text, string find, string replace) {
+            int pos = text.IndexOf(find);
+            if (pos < 0) {
+                return text;
+            }
+
+            return text.Substring(0, pos) + replace + text.Substring(pos + find.Length);
+        }
+
+        private void prependSelected(string text, bool remove) {
+            int selectStart = textBox.SelectionStart;
+            string[] selectedText = textBox.SelectedText.Split('\n');
+            string newText = "";
+            for (int x = 0; x < selectedText.Length; x++) {
+                if (remove) {
+                    selectedText[x] = replaceFirst(selectedText[x], text, "");
+                } else {
+                    selectedText[x] = text + selectedText[x];
+                }
+                
+                newText += selectedText[x];
+            }
+
+            newText = newText.Replace("\r", "\r\n");
+            textBox.SelectedText = newText;
+            textBox.SelectionStart = selectStart - ((remove) ? text.Length : 0);
+            textBox.SelectionLength = newText.Length;
+        }
+
+        private string getTab() {
+            string tab = "";
+            for (int x = 0; x < textBox.TabLength; x++) {
+                tab += " ";
+            }
+
+            return tab;
+        }
+
+        public void commentBlock() {
+            prependSelected(textBox.CommentPrefix, false);
+        }
+
+        public void unCommentBlock() {
+            prependSelected(textBox.CommentPrefix, true);
+        }
+
+        public void tabBlockIn() {
+            prependSelected(getTab(), false);
+        }
+
+        public void tabBlockOut() {
+            prependSelected(getTab(), true);
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e) {
+            if (changeSaved) {
+                this.fileItem.setSaved(false);
+
+                // show unsaved symbol if unsaved
+                btnSave.Text = (fileItem.isSaved) ? "" : Constants.UNSAVED_SYMBOL;
+            }
         }
 
         #endregion

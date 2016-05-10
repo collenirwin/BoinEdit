@@ -48,21 +48,29 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsiFind = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiFindReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.commentBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uncommentBlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabBlockInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabBlockOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uppercaseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiView = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiSideBar = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsiAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerFull = new System.Windows.Forms.SplitContainer();
+            this.lstDir = new BoinEditNS.DirTreeView();
+            this.btnToggleDir = new BoinBoxNS.BoinBox();
             this.pnlOpenFiles = new System.Windows.Forms.Panel();
+            this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
             this.splitContainerEditConsole = new System.Windows.Forms.SplitContainer();
             this.ofdOpen = new System.Windows.Forms.OpenFileDialog();
             this.fsWatcher = new System.IO.FileSystemWatcher();
             this.sfdSave = new System.Windows.Forms.SaveFileDialog();
-            this.goToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lstDir = new BoinEditNS.DirTreeView();
-            this.btnToggleDir = new BoinBoxNS.BoinBox();
-            this.btnToggleOpenFiles = new BoinBoxNS.BoinBox();
             this.msMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerFull)).BeginInit();
             this.splitContainerFull.Panel1.SuspendLayout();
@@ -208,7 +216,13 @@
             this.toolStripSeparator3,
             this.tsiFind,
             this.tsiFindReplace,
-            this.goToToolStripMenuItem});
+            this.goToToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.commentBlockToolStripMenuItem,
+            this.uncommentBlockToolStripMenuItem,
+            this.tabBlockInToolStripMenuItem,
+            this.tabBlockOutToolStripMenuItem,
+            this.convertCaseToolStripMenuItem});
             this.tsiEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
             this.tsiEdit.Name = "tsiEdit";
             this.tsiEdit.Size = new System.Drawing.Size(39, 20);
@@ -218,7 +232,7 @@
             // 
             this.tsiUndo.Name = "tsiUndo";
             this.tsiUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.tsiUndo.Size = new System.Drawing.Size(195, 22);
+            this.tsiUndo.Size = new System.Drawing.Size(247, 22);
             this.tsiUndo.Text = "Undo";
             this.tsiUndo.Click += new System.EventHandler(this.tsiUndo_Click);
             // 
@@ -226,20 +240,20 @@
             // 
             this.tsiRedo.Name = "tsiRedo";
             this.tsiRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.tsiRedo.Size = new System.Drawing.Size(195, 22);
+            this.tsiRedo.Size = new System.Drawing.Size(247, 22);
             this.tsiRedo.Text = "Redo";
             this.tsiRedo.Click += new System.EventHandler(this.tsiRedo_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(244, 6);
             // 
             // tsiCut
             // 
             this.tsiCut.Name = "tsiCut";
             this.tsiCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.tsiCut.Size = new System.Drawing.Size(195, 22);
+            this.tsiCut.Size = new System.Drawing.Size(247, 22);
             this.tsiCut.Text = "Cut";
             this.tsiCut.Click += new System.EventHandler(this.tsiCut_Click);
             // 
@@ -247,7 +261,7 @@
             // 
             this.tsiCopy.Name = "tsiCopy";
             this.tsiCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.tsiCopy.Size = new System.Drawing.Size(195, 22);
+            this.tsiCopy.Size = new System.Drawing.Size(247, 22);
             this.tsiCopy.Text = "Copy";
             this.tsiCopy.Click += new System.EventHandler(this.tsiCopy_Click);
             // 
@@ -255,20 +269,20 @@
             // 
             this.tsiPaste.Name = "tsiPaste";
             this.tsiPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.tsiPaste.Size = new System.Drawing.Size(195, 22);
+            this.tsiPaste.Size = new System.Drawing.Size(247, 22);
             this.tsiPaste.Text = "Paste";
             this.tsiPaste.Click += new System.EventHandler(this.tsiPaste_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(244, 6);
             // 
             // tsiFind
             // 
             this.tsiFind.Name = "tsiFind";
             this.tsiFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.tsiFind.Size = new System.Drawing.Size(195, 22);
+            this.tsiFind.Size = new System.Drawing.Size(247, 22);
             this.tsiFind.Text = "Find";
             this.tsiFind.Click += new System.EventHandler(this.tsiFind_Click);
             // 
@@ -276,9 +290,77 @@
             // 
             this.tsiFindReplace.Name = "tsiFindReplace";
             this.tsiFindReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.tsiFindReplace.Size = new System.Drawing.Size(195, 22);
+            this.tsiFindReplace.Size = new System.Drawing.Size(247, 22);
             this.tsiFindReplace.Text = "Find + Replace";
             this.tsiFindReplace.Click += new System.EventHandler(this.tsiFindReplace_Click);
+            // 
+            // goToToolStripMenuItem
+            // 
+            this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
+            this.goToToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.goToToolStripMenuItem.Text = "Go To...";
+            this.goToToolStripMenuItem.Click += new System.EventHandler(this.goToToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(244, 6);
+            // 
+            // commentBlockToolStripMenuItem
+            // 
+            this.commentBlockToolStripMenuItem.Name = "commentBlockToolStripMenuItem";
+            this.commentBlockToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.C)));
+            this.commentBlockToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.commentBlockToolStripMenuItem.Text = "Comment Block";
+            this.commentBlockToolStripMenuItem.Click += new System.EventHandler(this.commentBlockToolStripMenuItem_Click);
+            // 
+            // uncommentBlockToolStripMenuItem
+            // 
+            this.uncommentBlockToolStripMenuItem.Name = "uncommentBlockToolStripMenuItem";
+            this.uncommentBlockToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.U)));
+            this.uncommentBlockToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.uncommentBlockToolStripMenuItem.Text = "Uncomment Block";
+            this.uncommentBlockToolStripMenuItem.Click += new System.EventHandler(this.uncommentBlockToolStripMenuItem_Click);
+            // 
+            // tabBlockInToolStripMenuItem
+            // 
+            this.tabBlockInToolStripMenuItem.Name = "tabBlockInToolStripMenuItem";
+            this.tabBlockInToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Tab)));
+            this.tabBlockInToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.tabBlockInToolStripMenuItem.Text = "Tab Block In";
+            this.tabBlockInToolStripMenuItem.Click += new System.EventHandler(this.tabBlockInToolStripMenuItem_Click);
+            // 
+            // tabBlockOutToolStripMenuItem
+            // 
+            this.tabBlockOutToolStripMenuItem.Name = "tabBlockOutToolStripMenuItem";
+            this.tabBlockOutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Tab)));
+            this.tabBlockOutToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.tabBlockOutToolStripMenuItem.Text = "Tab Block Out";
+            this.tabBlockOutToolStripMenuItem.Click += new System.EventHandler(this.tabBlockOutToolStripMenuItem_Click);
+            // 
+            // convertCaseToolStripMenuItem
+            // 
+            this.convertCaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.uppercaseToolStripMenuItem,
+            this.uppercaseToolStripMenuItem1});
+            this.convertCaseToolStripMenuItem.Name = "convertCaseToolStripMenuItem";
+            this.convertCaseToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.convertCaseToolStripMenuItem.Text = "Convert Case";
+            // 
+            // uppercaseToolStripMenuItem
+            // 
+            this.uppercaseToolStripMenuItem.Name = "uppercaseToolStripMenuItem";
+            this.uppercaseToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.uppercaseToolStripMenuItem.Text = "Lowercase";
+            // 
+            // uppercaseToolStripMenuItem1
+            // 
+            this.uppercaseToolStripMenuItem1.Name = "uppercaseToolStripMenuItem1";
+            this.uppercaseToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+            this.uppercaseToolStripMenuItem1.Text = "Uppercase";
             // 
             // tsiView
             // 
@@ -354,15 +436,87 @@
             this.splitContainerFull.TabStop = false;
             this.splitContainerFull.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerFull_SplitterMoved);
             // 
+            // lstDir
+            // 
+            this.lstDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.lstDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstDir.dirColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.lstDir.directory = null;
+            this.lstDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstDir.fileColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.lstDir.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.lstDir.FullRowSelect = true;
+            this.lstDir.Indent = 9;
+            this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
+            this.lstDir.Location = new System.Drawing.Point(0, 48);
+            this.lstDir.Name = "lstDir";
+            treeNode1.Name = "nodOpenDir";
+            treeNode1.Text = "Open Directory";
+            this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.lstDir.ShowLines = false;
+            this.lstDir.Size = new System.Drawing.Size(150, 322);
+            this.lstDir.TabIndex = 2;
+            this.lstDir.TabStop = false;
+            this.lstDir.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.lstDir_NodeMouseDoubleClick);
+            // 
+            // btnToggleDir
+            // 
+            this.btnToggleDir.AntiAliased = false;
+            this.btnToggleDir.AutoSize = true;
+            this.btnToggleDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.btnToggleDir.BorderColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.BorderSize = 0;
+            this.btnToggleDir.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnToggleDir.FlatAppearance.BorderSize = 0;
+            this.btnToggleDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToggleDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnToggleDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnToggleDir.Location = new System.Drawing.Point(0, 24);
+            this.btnToggleDir.MouseDownBackColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.MouseOverBackColor = System.Drawing.Color.Empty;
+            this.btnToggleDir.Name = "btnToggleDir";
+            this.btnToggleDir.Size = new System.Drawing.Size(150, 24);
+            this.btnToggleDir.TabIndex = 0;
+            this.btnToggleDir.TabStop = false;
+            this.btnToggleDir.Text = "v Directory";
+            this.btnToggleDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnToggleDir.UseVisualStyleBackColor = false;
+            this.btnToggleDir.Click += new System.EventHandler(this.btnToggleDir_Click);
+            // 
             // pnlOpenFiles
             // 
             this.pnlOpenFiles.AutoSize = true;
             this.pnlOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 22);
+            this.pnlOpenFiles.Location = new System.Drawing.Point(0, 24);
             this.pnlOpenFiles.Name = "pnlOpenFiles";
             this.pnlOpenFiles.Size = new System.Drawing.Size(150, 0);
             this.pnlOpenFiles.TabIndex = 1;
             this.pnlOpenFiles.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.pnlOpenFiles_ControlRemoved);
+            // 
+            // btnToggleOpenFiles
+            // 
+            this.btnToggleOpenFiles.AntiAliased = false;
+            this.btnToggleOpenFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.btnToggleOpenFiles.BorderColor = System.Drawing.Color.Empty;
+            this.btnToggleOpenFiles.BorderSize = 0;
+            this.btnToggleOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnToggleOpenFiles.FlatAppearance.BorderSize = 0;
+            this.btnToggleOpenFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToggleOpenFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnToggleOpenFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnToggleOpenFiles.Location = new System.Drawing.Point(0, 0);
+            this.btnToggleOpenFiles.MouseDownBackColor = System.Drawing.Color.Empty;
+            this.btnToggleOpenFiles.MouseOverBackColor = System.Drawing.Color.Empty;
+            this.btnToggleOpenFiles.Name = "btnToggleOpenFiles";
+            this.btnToggleOpenFiles.Size = new System.Drawing.Size(150, 24);
+            this.btnToggleOpenFiles.TabIndex = 0;
+            this.btnToggleOpenFiles.TabStop = false;
+            this.btnToggleOpenFiles.Text = "v Open Files";
+            this.btnToggleOpenFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnToggleOpenFiles.UseVisualStyleBackColor = false;
+            this.btnToggleOpenFiles.Click += new System.EventHandler(this.btnToggleOpenFiles_Click);
             // 
             // splitContainerEditConsole
             // 
@@ -396,83 +550,6 @@
             // 
             this.sfdSave.AddExtension = false;
             this.sfdSave.Title = "Save As... - BoinEdit";
-            // 
-            // goToToolStripMenuItem
-            // 
-            this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
-            this.goToToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.goToToolStripMenuItem.Text = "Go To...";
-            this.goToToolStripMenuItem.Click += new System.EventHandler(this.goToToolStripMenuItem_Click);
-            // 
-            // lstDir
-            // 
-            this.lstDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.lstDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstDir.dirColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.lstDir.directory = null;
-            this.lstDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstDir.fileColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.lstDir.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lstDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.lstDir.FullRowSelect = true;
-            this.lstDir.Indent = 9;
-            this.lstDir.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(86)))), ((int)(((byte)(156)))), ((int)(((byte)(214)))));
-            this.lstDir.Location = new System.Drawing.Point(0, 45);
-            this.lstDir.Name = "lstDir";
-            treeNode1.Name = "nodOpenDir";
-            treeNode1.Text = "Open Directory";
-            this.lstDir.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            this.lstDir.ShowLines = false;
-            this.lstDir.Size = new System.Drawing.Size(150, 325);
-            this.lstDir.TabIndex = 2;
-            this.lstDir.TabStop = false;
-            this.lstDir.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.lstDir_NodeMouseDoubleClick);
-            // 
-            // btnToggleDir
-            // 
-            this.btnToggleDir.AutoSize = true;
-            this.btnToggleDir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.btnToggleDir.BorderColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.BorderSize = 0;
-            this.btnToggleDir.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnToggleDir.FlatAppearance.BorderSize = 0;
-            this.btnToggleDir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnToggleDir.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToggleDir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.btnToggleDir.Location = new System.Drawing.Point(0, 22);
-            this.btnToggleDir.MouseDownBackColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.MouseOverBackColor = System.Drawing.Color.Empty;
-            this.btnToggleDir.Name = "btnToggleDir";
-            this.btnToggleDir.Size = new System.Drawing.Size(150, 23);
-            this.btnToggleDir.TabIndex = 0;
-            this.btnToggleDir.TabStop = false;
-            this.btnToggleDir.Text = "v Directory";
-            this.btnToggleDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnToggleDir.UseVisualStyleBackColor = false;
-            this.btnToggleDir.Click += new System.EventHandler(this.btnToggleDir_Click);
-            // 
-            // btnToggleOpenFiles
-            // 
-            this.btnToggleOpenFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.btnToggleOpenFiles.BorderColor = System.Drawing.Color.Empty;
-            this.btnToggleOpenFiles.BorderSize = 0;
-            this.btnToggleOpenFiles.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnToggleOpenFiles.FlatAppearance.BorderSize = 0;
-            this.btnToggleOpenFiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnToggleOpenFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToggleOpenFiles.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.btnToggleOpenFiles.Location = new System.Drawing.Point(0, 0);
-            this.btnToggleOpenFiles.MouseDownBackColor = System.Drawing.Color.Empty;
-            this.btnToggleOpenFiles.MouseOverBackColor = System.Drawing.Color.Empty;
-            this.btnToggleOpenFiles.Name = "btnToggleOpenFiles";
-            this.btnToggleOpenFiles.Size = new System.Drawing.Size(150, 22);
-            this.btnToggleOpenFiles.TabIndex = 0;
-            this.btnToggleOpenFiles.TabStop = false;
-            this.btnToggleOpenFiles.Text = "v Open Files";
-            this.btnToggleOpenFiles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnToggleOpenFiles.UseVisualStyleBackColor = false;
-            this.btnToggleOpenFiles.Click += new System.EventHandler(this.btnToggleOpenFiles_Click);
             // 
             // Form1
             // 
@@ -541,6 +618,14 @@
         private System.IO.FileSystemWatcher fsWatcher;
         public System.Windows.Forms.SaveFileDialog sfdSave;
         private System.Windows.Forms.ToolStripMenuItem goToToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem commentBlockToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tabBlockInToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tabBlockOutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uncommentBlockToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertCaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uppercaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uppercaseToolStripMenuItem1;
     }
 }
 

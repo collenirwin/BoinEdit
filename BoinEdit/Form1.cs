@@ -78,7 +78,7 @@ namespace BoinEditNS {
         
         // Save As
         private void tsiSaveAs_Click(object sender, EventArgs e) {
-            sfdSave.ShowDialog();
+            saveAsPrompt(activeFileItem);
         }
 
         // Save All
@@ -158,6 +158,34 @@ namespace BoinEditNS {
         private void goToToolStripMenuItem_Click(object sender, EventArgs e) {
             if (activeFileItem != null) {
                 activeFileItem.editBox.textBox.ShowGoToDialog();
+            }
+        }
+
+        // Comment Block
+        private void commentBlockToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.commentBlock();
+            }
+        }
+
+        // Uncomment Block
+        private void uncommentBlockToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.unCommentBlock();
+            }
+        }
+
+        // Tab Block In
+        private void tabBlockInToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.tabBlockIn();
+            }
+        }
+
+        // Tab Block Out
+        private void tabBlockOutToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (activeFileItem != null) {
+                activeFileItem.editBox.tabBlockOut();
             }
         }
 
@@ -251,7 +279,7 @@ namespace BoinEditNS {
             if (file.isSaved) {
                 foreach (Control c in pnlOpenFiles.Controls) {
                     var f = c as FileItem;
-                    if ((f != null) && (f.file != null) && (f.file.FullName == file.file.FullName)) { // Already open
+                    if ((f.file != null) && (file.file != null) && (f.file.FullName == file.file.FullName)) { // Already open
                         openFileItem(f); // open it into the editor
                         return;
                     }
@@ -278,6 +306,7 @@ namespace BoinEditNS {
 
             activeFileItem = fi;
             fi.open();
+            fi.editBox.textBox.Select();
             fi.editBox.textBox.Focus();
         }
 
@@ -329,18 +358,21 @@ namespace BoinEditNS {
             if (fi != null && fi.file != null) { // save
                 return fi.save(true);
             } else if (fi != null) { // save as
-                saveAsPrompt(fi);
+                return saveAsPrompt(fi);
             }
 
             return false;
         }
 
         private bool saveAsPrompt(FileItem fi) {
-            sfdSave.FileName = fi.btnFile.Text;
-            if (sfdSave.ShowDialog() == DialogResult.OK) {
-                return fi.saveAs(sfdSave.FileName, true);
-            }
+            if (fi != null) {
+                sfdSave.FileName = fi.btnFile.Text;
 
+                if (sfdSave.ShowDialog() == DialogResult.OK) {
+                    return fi.saveAs(sfdSave.FileName, true);
+                }
+            }
+            
             return false;
         }
 

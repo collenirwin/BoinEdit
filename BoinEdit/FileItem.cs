@@ -1,9 +1,9 @@
-﻿using System;
+﻿using FastColoredTextBoxNS;
+using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
 using System.Text;
-using FastColoredTextBoxNS;
+using System.Windows.Forms;
 
 namespace BoinEditNS {
     public partial class FileItem : UserControl {
@@ -18,10 +18,9 @@ namespace BoinEditNS {
         bool _isOpen;
         bool _isSaved;
 
-        bool _init = false;
         bool _scratchIOFailed = false;
 
-        Color _closeForeColor = Color.FromArgb(255, 200, 200, 200);
+        Color _closeForeColor = Color.FromArgb(255, 150, 150, 150);
         Color _closeActiveForeColor = Color.FromArgb(255, 250, 250, 250);
         Color _activeBackColor = Color.FromArgb(255, 74, 74, 74);
 
@@ -51,7 +50,7 @@ namespace BoinEditNS {
         }
 
         public bool isSaved {
-            get { return this._isSaved; }
+            get { return  this._isSaved; }
         }
 
         public Color closeForeColor {
@@ -95,11 +94,10 @@ namespace BoinEditNS {
                 genFile();
             }
 
-            // add textchanged event
-            editBox.textBox.TextChanged += new EventHandler<TextChangedEventArgs>(this.textBox_TextChanged);
             this._actualBackColor = this.BackColor; // temp backcolor
             this.open();
-            this._init = true; // done initializing
+
+            btnClose.Text = (this.isSaved) ? "" : Constants.UNSAVED_SYMBOL;
         }
 
         /// <summary>
@@ -111,6 +109,8 @@ namespace BoinEditNS {
 
                 this.editBox.Show();
                 this.editBox.BringToFront();
+                this.editBox.textBox.Select();
+                this.editBox.textBox.Focus();
 
                 this.btnClose.BackColor = this._activeBackColor;
                 this.btnFile.BackColor = this._activeBackColor;
@@ -137,13 +137,12 @@ namespace BoinEditNS {
         /// <returns>true if opened successfully</returns>
         public bool openFile() {
             try {
-                this._init = false;
-                this.editBox.textBox.OpenFile(this.file.FullName);
-                this._init = true;
+                this.editBox.openFile(this.file.FullName);
+
                 return true;
             } catch (Exception ex) {
                 MessageBox.Show("Failed to open " + this.file.Name + " with the following message:\r\n  " + ex.Message, Constants.CAPTION_ERROR);
-                this._init = true;
+
                 return false;
             }
         }
@@ -162,6 +161,8 @@ namespace BoinEditNS {
 
                     return false;
                 }
+
+                this.editBox.init();
 
             } else {
                 SaveFileDialog sfd = new SaveFileDialog();
@@ -194,6 +195,7 @@ namespace BoinEditNS {
 
             this._file = new FileInfo(newPath);
             this.btnFile.Text = this.file.Name;
+            this.editBox.init();
             return true;
         }
 
@@ -205,15 +207,30 @@ namespace BoinEditNS {
             return genScratchFile(this.file.FullName, false);
         }
 
+        /// <summary>
+        /// Sets FileItem.isSaved, updates FileItem.btnClose.Text with the proper symbol
+        /// </summary>
+        public void setSaved(bool saved) {
+            this._isSaved = saved;
+
+            // what a hack, wow
+            // this is needed because btnClose.Text won't draw otherwise
+            btnClose_MouseEnter(this, new EventArgs());
+            btnClose_MouseLeave(this, new EventArgs());
+        }
+
         #endregion
 
         #region Private
 
-        private bool _save(string path) {
+        private bool _save(string path, bool changeSaved = true) {
             try {
                 this.editBox.textBox.SaveToFile(path, Encoding.UTF8);
-                this._isSaved = true;
-                btnClose.Text = "";
+                if (changeSaved) {
+                    this._isSaved = true;
+                    btnClose.Text = "";
+                }
+                
                 return true;
             } catch {
                 return false;
@@ -238,7 +255,7 @@ namespace BoinEditNS {
                 string hashPath = scdir.FullName + "\\" + Utils.getHash(fileNameOrPath);
 
                 // save to scratch dir
-                if (!this._save(hashPath)) {
+                if (!this._save(hashPath, false)) {
                     warnScratchIOFailed();
                     return false;
                 }
@@ -268,13 +285,6 @@ namespace BoinEditNS {
 
         #region Events & Event Overrides
 
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e) {
-            if (this._init) {
-                this._isSaved = false;
-                this.btnClose.Text = "■";
-            }
-        }
-
         protected override void OnBackColorChanged(EventArgs e) {
             base.OnBackColorChanged(e);
 
@@ -297,7 +307,7 @@ namespace BoinEditNS {
         }
 
         private void btnClose_MouseLeave(object sender, EventArgs e) {
-            btnClose.Text = (this.isSaved) ? "" : "■";
+            btnClose.Text = (this.isSaved) ? "" : Constants.UNSAVED_SYMBOL;
             btnClose.ForeColor = closeForeColor;
         }
 
